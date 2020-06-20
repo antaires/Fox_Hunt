@@ -4,7 +4,7 @@ class Actor;
 
 class Component {
 private:
-  Actor* mOwner;
+  Actor* m_Owner;
   int m_UpdateOrder;
 public:
   // lower update order -> update earlier

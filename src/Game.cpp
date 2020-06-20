@@ -108,7 +108,6 @@ void Game::ProcessInput()
     m_Fox.vel.x += 1;
   }
 
-
 }
 
 void Game::UpdateGame()
@@ -127,6 +126,36 @@ void Game::UpdateGame()
   }
 
   // TODO: update objects in game world as function of delta time
+  m_UpdatingActors = true;
+  for(auto actor: m_Actors)
+  {
+    actor->Update(deltaTime);
+  }
+  m_UpdatingActors = false;
+
+  // move pending actors to actors and clear
+  for(auto pending : m_PendingActors)
+  {
+    m_Actors.emplace_back(pending);
+  }
+  m_PendingActors.clear();
+
+  // add dead actors to temp vector
+  std::vector<Actor*> deadActors;
+  for(auto actor : m_Actors)
+  {
+    if (actor->GetState() == Actor::E_Dead)
+    {
+      deadActors.emplace_back(actor);
+    }
+  }
+
+  // delete dead actors
+  for(auto actor : deadActors)
+  {
+    delete actor; // TODO is this the safe way?
+  }
+
   // update fox pos
   if (m_Fox.vel.y != 0)
   {
@@ -139,7 +168,7 @@ void Game::UpdateGame()
     ClampToScreen(m_Fox.pos.x, FOX_WIDTH, SCREEN_WIDTH);
   }
 
-  // update hunter pos based on fox position
+  // TODO update hunter pos based on fox position
 
 }
 
@@ -147,6 +176,31 @@ void Game::ClampToScreen(float& pos, int objHeight, int limit)
 {
   if (pos < objHeight/2.0f){pos = objHeight/2.0f;}
   if (pos > limit - (objHeight / 2)){pos = limit - (objHeight/2);}
+}
+
+void Game::AddActor(Actor* actor)
+{
+  if (m_UpdatingActors)
+  {
+    m_PendingActors.emplace_back(actor);
+  } else {
+    m_Actors.emplace_back(actor);
+  }
+}
+
+void Game::RemoveActor(Actor* actor)
+{
+  auto it = std::find(m_Actors.begin(), m_Actors.end(), actor);
+  if (it != m_Actors.end())
+  {
+    m_Actors.erase(it);
+  } else {
+    it = std::find(m_PendingActors.begin(), m_PendingActors.end(), actor);
+    if (it != m_PendingActors.end())
+    {
+      m_PendingActors.erase(it);
+    }
+  }
 }
 
 void Game::GenerateOutput()
@@ -158,11 +212,8 @@ void Game::GenerateOutput()
     , 38
     , 255
   );
-
   SDL_RenderClear(m_Renderer);
-
   DrawGameScene();
-
   SDL_RenderPresent(m_Renderer);
 }
 
@@ -204,4 +255,9 @@ void Game::ShutDown()
   SDL_DestroyWindow(m_Window);
   SDL_DestroyRenderer(m_Renderer);
   SDL_Quit();
+
+  while (!m_Actors.empty())
+  {
+    delete m_Actors.back();
+  }
 }

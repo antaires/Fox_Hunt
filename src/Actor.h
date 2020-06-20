@@ -1,10 +1,15 @@
 #pragma once
 
+#include "Constants.h"
+#include "Component.h"
+#include <vector>
+
 // TODO temp
 class Game;
-class Component;
 
 class Actor {
+public:
+  enum State {E_Active, E_Paused, E_Dead};
 private:
   State m_State;
   Vector2 m_Position; // center of actor
@@ -13,7 +18,6 @@ private:
   std::vector<class Component*> m_Components; // sorted by update order
   class Game* m_Game;
 public:
-  enum State {E_Active, E_Paused, E_Dead};
   Actor(class Game* game);
   virtual ~Actor();
   void Update(float deltaTime);
@@ -21,6 +25,7 @@ public:
   virtual void UpdateActor(float deltaTime);
 
   // TODO: Getters / setters...
+  State GetState() const;
 
   void AddComponent(class Component* component);
   void RemoveComponent(class Component* component);
