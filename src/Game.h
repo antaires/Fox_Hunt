@@ -11,7 +11,6 @@ private:
   void GenerateOutput();
 public:
   Game();
-  ~Game();
   bool Initialize();
   void RunLoop();
   void ShutDown();
