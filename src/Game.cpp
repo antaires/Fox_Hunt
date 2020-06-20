@@ -45,7 +45,28 @@ void Game::RunLoop()
 
 void Game::ProcessInput()
 {
-  // TODO
+  SDL_Event event;
+
+  // loop over events in event queue
+  while(SDL_PollEvent(&event))
+  {
+    switch(event.type)
+    {
+      // handle all event types
+      case SDL_QUIT:
+        m_IsRunning = false;
+        break;
+    }
+  }
+
+  // get state of keyboard
+  const Uint8* state = SDL_GetKeyboardState(NULL);
+
+  // if escape pressed, exit Game RunLoop
+  if (state[SDL_SCANCODE_ESCAPE])
+  {
+    m_IsRunning = false;
+  }
 }
 
 void Game::UpdateGame()
