@@ -1,5 +1,7 @@
 #include "Game.h"
 #include "Constants.h"
+#include "Component.h"
+#include "SpriteComponent.h"
 
 Game::Game()
 {
@@ -51,6 +53,10 @@ bool Game::Initialize()
     SDL_Log("Failed to create renderer: %s", SDL_GetError());
     return false;
   }
+
+  IMG_init(IMG_INIT_PNG | IMG_INIT_JPG); // can add flags for different types
+
+  LoadData();
 
   return true;
 }
@@ -201,6 +207,45 @@ void Game::RemoveActor(Actor* actor)
       m_PendingActors.erase(it);
     }
   }
+}
+
+SDL_Texture* Game::LoadTexture(const char* fileName)
+{
+  SDL_Surface* surface = IMG_Load(fileName);
+  if (!surface)
+  {
+    SDL_Log("Failed to load texture file: %s", filename);
+    return nullptr;
+  }
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(m_Renderer, surface);
+  SDL_FreeSurface(surface);
+  if(!texture)
+  {
+    SDL_Log("Failed to create texture from surface for: %s", filename);
+    return nullptr;
+  }
+  return texture;
+}
+
+// hard coded for now, TODO: load from files and binary
+void Game::LoadData()
+{
+  // TODO : load all textures
+}
+
+void Game::AddSprite(SpriteComponent* sprite)
+{
+  int myDrawOrder = sprite->GetDrawOrder();
+  auto it = m_Sprites.begin();
+  for(; it != m_Sprites.end(); ++it)
+  {
+    if (myDrawOrder < (*it)->GetDrawOrder())
+    {
+      break;
+    }
+  }
+
+  m_Sprites.insert(it, sprite);
 }
 
 void Game::GenerateOutput()

@@ -26,6 +26,8 @@ public:
 
   // TODO: Getters / setters...
   State GetState() const;
+  Vector2 GetPosition() const;
+  float GetRotation() const;
 
   void AddComponent(class Component* component);
   void RemoveComponent(class Component* component);
