@@ -1,12 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-
-struct Vector2
-{
-  float x;
-  float y;
-};
+#include "Entity.h"
 
 class Game {
 private:
@@ -16,10 +11,8 @@ private:
   Uint32 m_TicksCount;
   bool m_IsRunning;
 
-  Vector2 m_FoxPos;
-  Vector2 m_FoxVel;
-  Vector2 m_HunterPos;
-  Vector2 m_HunterVel;
+  Entity m_Fox;
+  Entity m_Hunter;
   Vector2 m_WallPos;
 
   void ProcessInput();

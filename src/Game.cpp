@@ -8,10 +8,10 @@ Game::Game()
   m_TicksCount = 0;
 
   // TODO : temporary
-  m_FoxPos.x = SCREEN_WIDTH/2; m_FoxPos.y = SCREEN_HEIGHT/2;
-  m_HunterPos.x = 0; m_HunterPos.y = 0;
-  m_FoxVel.x = 0; m_FoxVel.y = 0;
-  m_HunterVel.x = 0; m_HunterVel.y = 0;
+  m_Fox.pos.x = SCREEN_WIDTH/2; m_Fox.pos.y = SCREEN_HEIGHT/2;
+  m_Hunter.pos.x = 0; m_Hunter.pos.y = 0;
+  m_Fox.vel.x = 0; m_Fox.vel.y = 0;
+  m_Hunter.vel.x = 0; m_Hunter.vel.y = 0;
   m_WallPos.x = SCREEN_WIDTH/4;
   m_WallPos.y = SCREEN_HEIGHT/4;
 }
@@ -93,19 +93,19 @@ void Game::ProcessInput()
   // handle player input
   if (state[SDL_SCANCODE_W])
   {
-    m_FoxVel.y -= 1;
+    m_Fox.vel.y -= 1;
   }
   if (state[SDL_SCANCODE_S])
   {
-    m_FoxVel.y += 1;
+    m_Fox.vel.y += 1;
   }
   if (state[SDL_SCANCODE_A])
   {
-    m_FoxVel.x -= 1;
+    m_Fox.vel.x -= 1;
   }
   if (state[SDL_SCANCODE_D])
   {
-    m_FoxVel.x += 1;
+    m_Fox.vel.x += 1;
   }
 
 
@@ -128,16 +128,19 @@ void Game::UpdateGame()
 
   // TODO: update objects in game world as function of delta time
   // update fox pos
-  if (m_FoxVel.y != 0)
+  if (m_Fox.vel.y != 0)
   {
-    m_FoxPos.y += m_FoxVel.y * FOX_SPEED * deltaTime;
-    ClampToScreen(m_FoxPos.y, FOX_HEIGHT, SCREEN_HEIGHT);
+    m_Fox.pos.y += m_Fox.vel.y * FOX_SPEED * deltaTime;
+    ClampToScreen(m_Fox.pos.y, FOX_HEIGHT, SCREEN_HEIGHT);
   }
-  if (m_FoxVel.x != 0)
+  if (m_Fox.vel.x != 0)
   {
-    m_FoxPos.x += m_FoxVel.x * FOX_SPEED * deltaTime;
-    ClampToScreen(m_FoxPos.x, FOX_WIDTH, SCREEN_WIDTH);
+    m_Fox.pos.x += m_Fox.vel.x * FOX_SPEED * deltaTime;
+    ClampToScreen(m_Fox.pos.x, FOX_WIDTH, SCREEN_WIDTH);
   }
+
+  // update hunter pos based on fox position
+
 }
 
 void Game::ClampToScreen(float& pos, int objHeight, int limit)
@@ -178,8 +181,8 @@ void Game::DrawGameScene()
   // draw fox
   SDL_SetRenderDrawColor(m_Renderer, 255, 136, 0, 255); // bright orange
   SDL_Rect foxRect {
-      static_cast<int> (m_FoxPos.x - FOX_WIDTH / 2)
-    , static_cast<int> (m_FoxPos.y - FOX_HEIGHT / 2)
+      static_cast<int> (m_Fox.pos.x - FOX_WIDTH / 2)
+    , static_cast<int> (m_Fox.pos.y - FOX_HEIGHT / 2)
     , FOX_WIDTH
     , FOX_HEIGHT
   };
@@ -188,8 +191,8 @@ void Game::DrawGameScene()
   // draw hunter
   SDL_SetRenderDrawColor(m_Renderer, 255, 21, 0, 255); // bright red
   SDL_Rect hunterRect {
-      static_cast<int> (m_HunterPos.x - HUNTER_WIDTH / 2)
-    , static_cast<int> (m_HunterPos.y - HUNTER_HEIGHT / 2)
+      static_cast<int> (m_Hunter.pos.x - HUNTER_WIDTH / 2)
+    , static_cast<int> (m_Hunter.pos.y - HUNTER_HEIGHT / 2)
     , HUNTER_WIDTH
     , HUNTER_HEIGHT
   };
