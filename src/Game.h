@@ -13,6 +13,7 @@ private:
   SDL_Window* m_Window;
   SDL_Renderer* m_Renderer;
 
+  Uint32 m_TicksCount;
   bool m_IsRunning;
 
   Vector2 m_FoxPos;

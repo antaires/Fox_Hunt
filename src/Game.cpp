@@ -5,6 +5,7 @@ Game::Game()
 {
   m_Window = nullptr;
   m_IsRunning = true;
+  m_TicksCount = 0;
 
   // TODO : temporary
   m_FoxPos.x = SCREEN_WIDTH/2; m_FoxPos.y = SCREEN_HEIGHT/2;
@@ -88,7 +89,20 @@ void Game::ProcessInput()
 
 void Game::UpdateGame()
 {
-  // TODO
+  // frame limiting : wait until 16 ms elapsed
+  while(!SDL_TICKS_PASSED(SDL_GetTicks(), m_TicksCount + 16));
+
+  // deltaTime is difference in ticks from last frame
+  float deltaTime = (SDL_GetTicks() - m_TicksCount) / 1000.0f;
+  m_TicksCount = SDL_GetTicks();
+
+  // clamp max delta time value (to avoid jumping ahead during debug)
+  if (deltaTime > 0.05f)
+  {
+    deltaTime = 0.05f;
+  }
+
+  // TODO: update objects in game world as function of delta time
 }
 
 void Game::GenerateOutput()
