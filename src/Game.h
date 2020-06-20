@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-#include "Entity.h"
+#include "Actor.h"
 
 class Game {
 private:
