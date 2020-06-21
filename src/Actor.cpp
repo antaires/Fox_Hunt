@@ -8,7 +8,6 @@ Actor::Actor(class Game* game)
   , m_Game(game)
 {
   m_Game->AddActor(this);
-  // TODO: pass function pointer to AddActor?
 }
 
 Actor::~Actor()
