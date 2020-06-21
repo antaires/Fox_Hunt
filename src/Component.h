@@ -1,15 +1,13 @@
 #pragma once
 
-class Actor;
-
 class Component {
-private:
-  Actor* m_Owner;
+protected:
+  class Actor* m_Owner;
   int m_UpdateOrder;
 public:
   // lower update order -> update earlier
   Component(class Actor* owner, int updateOrder = 100);
   virtual ~Component();
   virtual void Update(float deltaTime);
-  int GetUpdateOrder() const {return m_UpdateOrder;}
+  int GetUpdateOrder() const;
 };

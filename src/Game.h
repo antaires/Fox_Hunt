@@ -2,6 +2,9 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
+#include <string>
+#include <unordered_map>
+
 #include "Actor.h"
 #include "SpriteComponent.h"
 
@@ -18,14 +21,14 @@ private:
 
   Uint32 m_TicksCount;
   bool m_IsRunning;
-
   bool m_UpdatingActors;
-  std::vector<Actor*> m_Actors;
-  std::vector<Actor*> m_PendingActors;
 
-  std::vector<SpriteComponent*> m_Sprites;
+  std::vector<class Actor*> m_Actors;
+  std::vector<class Actor*> m_PendingActors;
+  std::vector<class SpriteComponent*> m_Sprites;
+  std::unordered_map<std::string, SDL_Texture*> m_Textures;
 
-  // TODO temporary
+  // Game specific
   Entity m_Fox;
   Entity m_Hunter;
   Vector2 m_WallPos;
@@ -36,16 +39,20 @@ private:
 
   void DrawGameScene();
   void ClampToScreen(float& pos, int objHeight, int limit);
-  void AddActor(Actor* actor);
-  void RemoveActor(Actor* actor);
 
-  SDL_Texture* LoadTexture(const char* fileName);
   void LoadData();
-  void AddSprite(SpriteComponent* sprite);
+  void UnloadData();
 
 public:
   Game();
   bool Initialize();
   void RunLoop();
   void ShutDown();
+
+  void AddActor(class Actor* actor);
+  void RemoveActor(class Actor* actor);
+  void AddSprite(class SpriteComponent* sprite);
+  void RemoveSprite(class SpriteComponent* sprite);
+
+  SDL_Texture* GetTexture(const std::string& fileName);
 };

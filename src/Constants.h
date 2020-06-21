@@ -1,11 +1,5 @@
 #pragma once
 
-struct Vector2
-{
-  float x;
-  float y;
-};
-
 const int FOX_WIDTH = 20;
 const int FOX_HEIGHT = 20;
 const int HUNTER_WIDTH = 20;

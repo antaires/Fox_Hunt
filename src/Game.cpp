@@ -1,14 +1,17 @@
 #include "Game.h"
+#include "SDL2/SDL_image.h"
 #include "Constants.h"
-#include "Component.h"
 #include "SpriteComponent.h"
 
-Game::Game()
-{
-  m_Window = nullptr;
-  m_IsRunning = true;
-  m_TicksCount = 0;
+#include <algorithm>
 
+Game::Game()
+  : m_Window(nullptr)
+  , m_Renderer(nullptr)
+  , m_IsRunning(true)
+  , m_UpdatingActors(false)
+  , m_TicksCount(0)
+{
   // TODO : temporary
   m_Fox.pos.x = SCREEN_WIDTH/2; m_Fox.pos.y = SCREEN_HEIGHT/2;
   m_Hunter.pos.x = 0; m_Hunter.pos.y = 0;
@@ -20,7 +23,6 @@ Game::Game()
 
 bool Game::Initialize()
 {
-  // setup SDL
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
   {
     SDL_Log("Unable to Initialize SDL: %s", SDL_GetError());
@@ -54,10 +56,14 @@ bool Game::Initialize()
     return false;
   }
 
-  IMG_init(IMG_INIT_PNG | IMG_INIT_JPG); // can add flags for different types
+  if (IMG_Init(IMG_INIT_PNG == 0)) // can add flags for different types
+  {
+    SDL_Log("Unable to init SDL_image: %s", SDL_GetError());
+    return false;
+  }
 
   LoadData();
-
+  m_TicksCount = SDL_GetTicks();
   return true;
 }
 
@@ -97,6 +103,7 @@ void Game::ProcessInput()
   }
 
   // handle player input
+  // player->ProcessKeyboard(state)
   if (state[SDL_SCANCODE_W])
   {
     m_Fox.vel.y -= 1;
@@ -123,13 +130,13 @@ void Game::UpdateGame()
 
   // deltaTime is difference in ticks from last frame
   float deltaTime = (SDL_GetTicks() - m_TicksCount) / 1000.0f;
-  m_TicksCount = SDL_GetTicks();
 
   // clamp max delta time value (to avoid jumping ahead during debug)
   if (deltaTime > 0.05f)
   {
     deltaTime = 0.05f;
   }
+  m_TicksCount = SDL_GetTicks();
 
   // TODO: update objects in game world as function of delta time
   m_UpdatingActors = true;
@@ -162,7 +169,7 @@ void Game::UpdateGame()
     delete actor; // TODO is this the safe way?
   }
 
-  // update fox pos
+  // TODO temporary update fox pos
   if (m_Fox.vel.y != 0)
   {
     m_Fox.pos.y += m_Fox.vel.y * FOX_SPEED * deltaTime;
@@ -173,7 +180,6 @@ void Game::UpdateGame()
     m_Fox.pos.x += m_Fox.vel.x * FOX_SPEED * deltaTime;
     ClampToScreen(m_Fox.pos.x, FOX_WIDTH, SCREEN_WIDTH);
   }
-
   // TODO update hunter pos based on fox position
 
 }
@@ -196,45 +202,80 @@ void Game::AddActor(Actor* actor)
 
 void Game::RemoveActor(Actor* actor)
 {
-  auto it = std::find(m_Actors.begin(), m_Actors.end(), actor);
+  // check both pending and active actors
+  auto it = std::find(m_PendingActors.begin(), m_PendingActors.end(), actor);
+  if (it != m_PendingActors.end())
+  {
+    // swap to end of vector and pop off (avoid erase copies)
+    std::iter_swap(it, m_PendingActors.end() -1);
+    m_PendingActors.pop_back();
+  }
+
+  it = std::find(m_Actors.begin(), m_Actors.end(), actor);
   if (it != m_Actors.end())
   {
-    m_Actors.erase(it);
-  } else {
-    it = std::find(m_PendingActors.begin(), m_PendingActors.end(), actor);
-    if (it != m_PendingActors.end())
-    {
-      m_PendingActors.erase(it);
-    }
+    std::iter_swap(it, m_Actors.end() -1);
+    m_Actors.pop_back();
   }
-}
-
-SDL_Texture* Game::LoadTexture(const char* fileName)
-{
-  SDL_Surface* surface = IMG_Load(fileName);
-  if (!surface)
-  {
-    SDL_Log("Failed to load texture file: %s", filename);
-    return nullptr;
-  }
-  SDL_Texture* texture = SDL_CreateTextureFromSurface(m_Renderer, surface);
-  SDL_FreeSurface(surface);
-  if(!texture)
-  {
-    SDL_Log("Failed to create texture from surface for: %s", filename);
-    return nullptr;
-  }
-  return texture;
 }
 
 // hard coded for now, TODO: load from files and binary
 void Game::LoadData()
 {
   // TODO : load all textures
+
+  // create player
+
+  // create background...
 }
+
+void Game::UnloadData()
+{
+  while(!m_Actors.empty())
+  {
+    delete m_Actors.back();
+  }
+
+  for(auto t : m_Textures)
+  {
+    SDL_DestroyTexture(t.second);
+  }
+  m_Textures.clear();
+}
+
+SDL_Texture* Game::GetTexture(const std::string& fileName)
+{
+  SDL_Texture* texture = nullptr;
+
+  // is texture already loaded?
+  auto it = m_Textures.find(fileName);
+  if (it != m_Textures.end())
+  {
+    texture = it->second;
+  } else {
+    // load from file
+    SDL_Surface* surface = IMG_Load(fileName.c_str());
+    if (!surface)
+    {
+      SDL_Log("Failed to load texture file: %s", fileName.c_str());
+      return nullptr;
+    }
+    texture = SDL_CreateTextureFromSurface(m_Renderer, surface);
+    SDL_FreeSurface(surface);
+    if(!texture)
+    {
+      SDL_Log("Failed to create texture from surface for: %s", fileName.c_str());
+      return nullptr;
+    }
+    m_Textures.emplace(fileName, texture);
+  }
+  return texture;
+}
+
 
 void Game::AddSprite(SpriteComponent* sprite)
 {
+  // insert by sorted order
   int myDrawOrder = sprite->GetDrawOrder();
   auto it = m_Sprites.begin();
   for(; it != m_Sprites.end(); ++it)
@@ -244,8 +285,17 @@ void Game::AddSprite(SpriteComponent* sprite)
       break;
     }
   }
-
   m_Sprites.insert(it, sprite);
+}
+
+void Game::RemoveSprite(SpriteComponent* sprite)
+{
+  // cant use swap here because need to preserve ordering
+  auto it = std::find(m_Sprites.begin(), m_Sprites.end(), sprite);
+  if (it != m_Sprites.end())
+  {
+    m_Sprites.erase(it);
+  }
 }
 
 void Game::GenerateOutput()
@@ -258,7 +308,14 @@ void Game::GenerateOutput()
     , 255
   );
   SDL_RenderClear(m_Renderer);
-  DrawGameScene();
+
+  DrawGameScene(); // TODO needed?
+  // Draw all sprite components
+  for(auto sprite: m_Sprites)
+  {
+    sprite->Draw(m_Renderer);
+  }
+
   SDL_RenderPresent(m_Renderer);
 }
 
@@ -297,12 +354,9 @@ void Game::DrawGameScene()
 
 void Game::ShutDown()
 {
-  SDL_DestroyWindow(m_Window);
+  UnloadData();
+  IMG_Quit();
   SDL_DestroyRenderer(m_Renderer);
+  SDL_DestroyWindow(m_Window);
   SDL_Quit();
-
-  while (!m_Actors.empty())
-  {
-    delete m_Actors.back();
-  }
 }

@@ -1,13 +1,21 @@
 #include "SpriteComponent.h"
-#include <cmath>
+#include "Actor.h"
+#include "Game.h"
 
-SpriteComponent::SpriteComponent(class Actor* owner, int drawOrder = 100)
-  : m_DrawOrder(drawOrder)
+SpriteComponent::SpriteComponent(class Actor* owner, int drawOrder)
+  : Component(owner)
+  , m_Texture(nullptr)
+  , m_DrawOrder(drawOrder)
+  , m_TextureWidth(0)
+  , m_TextureHeight(0)
+  {
+    m_Owner->GetGame()->AddSprite(this);
+  }
+
+SpriteComponent::~SpriteComponent()
 {
-  m_Owner = owner;
+  m_Owner->GetGame()->RemoveSprite(this);
 }
-
-SpriteComponent::~SpriteComponent(){}
 
 void SpriteComponent::Draw(SDL_Renderer* renderer)
 {
@@ -20,7 +28,7 @@ void SpriteComponent::Draw(SDL_Renderer* renderer)
     r.y = static_cast<int>(m_Owner->GetPosition().y - r.h / 2);
 
     SDL_RenderCopyEx(
-       m_Renderer
+       renderer
       , m_Texture
       , nullptr
       , &r

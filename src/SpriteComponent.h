@@ -3,8 +3,6 @@
 #include <SDL2/SDL.h>
 #include "Component.h"
 
-class Actor;
-
 class SpriteComponent: public Component {
  private:
  protected:
@@ -13,7 +11,7 @@ class SpriteComponent: public Component {
    int m_TextureWidth;
    int m_TextureHeight;
  public:
-   SpriteComponent(class Actor* owner, int drawOrder);
+   SpriteComponent(class Actor* owner, int drawOrder = 100);
    ~SpriteComponent();
    virtual void Draw(SDL_Renderer* renderer);
    virtual void SetTexture(SDL_Texture* texture);
