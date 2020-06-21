@@ -6,39 +6,32 @@
 #include <unordered_map>
 
 #include "Actor.h"
+#include "Player.h"
 #include "SpriteComponent.h"
-
-// TODO temporary
-struct Entity {
-  Vector2 pos;
-  Vector2 vel;
-};
 
 class Game {
 private:
   SDL_Window* m_Window;
   SDL_Renderer* m_Renderer;
 
-  Uint32 m_TicksCount;
   bool m_IsRunning;
   bool m_UpdatingActors;
+  Uint32 m_TicksCount;
+
+  // Game specific
+  Player* m_Player;
+  Vector2 m_WallPos;
 
   std::vector<class Actor*> m_Actors;
   std::vector<class Actor*> m_PendingActors;
   std::vector<class SpriteComponent*> m_Sprites;
   std::unordered_map<std::string, SDL_Texture*> m_Textures;
 
-  // Game specific
-  Entity m_Fox;
-  Entity m_Hunter;
-  Vector2 m_WallPos;
-
   void ProcessInput();
   void UpdateGame();
   void GenerateOutput();
 
   void DrawGameScene();
-  void ClampToScreen(float& pos, int objHeight, int limit);
 
   void LoadData();
   void UnloadData();

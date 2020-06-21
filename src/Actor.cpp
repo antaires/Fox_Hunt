@@ -1,4 +1,5 @@
 #include "Actor.h"
+#include "Game.h"
 
 Actor::Actor(class Game* game)
   : m_State(E_Active)
@@ -81,4 +82,10 @@ void Actor::RemoveComponent(class Component* component)
   {
     m_Components.erase(it);
   }
+}
+
+void Actor::ClampToScreen(float& pos, int objHeight, int limit)
+{
+  if (pos < objHeight/2.0f){pos = objHeight/2.0f;}
+  if (pos > limit - (objHeight / 2)){pos = limit - (objHeight/2);}
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Actor.h"
+
 class Component {
 protected:
   class Actor* m_Owner;

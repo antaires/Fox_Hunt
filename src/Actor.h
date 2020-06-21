@@ -2,8 +2,9 @@
 
 #include "Constants.h"
 #include "Math.h"
-#include "Game.h"
 #include <vector>
+
+class Game;
 
 class Actor {
 public:
@@ -37,4 +38,6 @@ public:
 
   void AddComponent(class Component* component);
   void RemoveComponent(class Component* component);
+
+  void ClampToScreen(float& pos, int objHeight, int limit);
 };

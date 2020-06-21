@@ -11,15 +11,8 @@ Game::Game()
   , m_IsRunning(true)
   , m_UpdatingActors(false)
   , m_TicksCount(0)
-{
-  // TODO : temporary
-  m_Fox.pos.x = SCREEN_WIDTH/2; m_Fox.pos.y = SCREEN_HEIGHT/2;
-  m_Hunter.pos.x = 0; m_Hunter.pos.y = 0;
-  m_Fox.vel.x = 0; m_Fox.vel.y = 0;
-  m_Hunter.vel.x = 0; m_Hunter.vel.y = 0;
-  m_WallPos.x = SCREEN_WIDTH/4;
-  m_WallPos.y = SCREEN_HEIGHT/4;
-}
+  , m_Player(nullptr)
+{}
 
 bool Game::Initialize()
 {
@@ -103,24 +96,7 @@ void Game::ProcessInput()
   }
 
   // handle player input
-  // player->ProcessKeyboard(state)
-  if (state[SDL_SCANCODE_W])
-  {
-    m_Fox.vel.y -= 1;
-  }
-  if (state[SDL_SCANCODE_S])
-  {
-    m_Fox.vel.y += 1;
-  }
-  if (state[SDL_SCANCODE_A])
-  {
-    m_Fox.vel.x -= 1;
-  }
-  if (state[SDL_SCANCODE_D])
-  {
-    m_Fox.vel.x += 1;
-  }
-
+  m_Player->ProcessKeyboard(state);
 }
 
 void Game::UpdateGame()
@@ -138,7 +114,7 @@ void Game::UpdateGame()
   }
   m_TicksCount = SDL_GetTicks();
 
-  // TODO: update objects in game world as function of delta time
+  // update objects in game world as function of delta time
   m_UpdatingActors = true;
   for(auto actor: m_Actors)
   {
@@ -168,26 +144,6 @@ void Game::UpdateGame()
   {
     delete actor; // TODO is this the safe way?
   }
-
-  // TODO temporary update fox pos
-  if (m_Fox.vel.y != 0)
-  {
-    m_Fox.pos.y += m_Fox.vel.y * FOX_SPEED * deltaTime;
-    ClampToScreen(m_Fox.pos.y, FOX_HEIGHT, SCREEN_HEIGHT);
-  }
-  if (m_Fox.vel.x != 0)
-  {
-    m_Fox.pos.x += m_Fox.vel.x * FOX_SPEED * deltaTime;
-    ClampToScreen(m_Fox.pos.x, FOX_WIDTH, SCREEN_WIDTH);
-  }
-  // TODO update hunter pos based on fox position
-
-}
-
-void Game::ClampToScreen(float& pos, int objHeight, int limit)
-{
-  if (pos < objHeight/2.0f){pos = objHeight/2.0f;}
-  if (pos > limit - (objHeight / 2)){pos = limit - (objHeight/2);}
 }
 
 void Game::AddActor(Actor* actor)
@@ -225,6 +181,10 @@ void Game::LoadData()
   // TODO : load all textures
 
   // create player
+  m_Player = new Player(this);
+
+  m_WallPos.x = SCREEN_WIDTH/4;
+  m_WallPos.y = SCREEN_HEIGHT/4;
 
   // create background...
 }
@@ -321,6 +281,7 @@ void Game::GenerateOutput()
 
 void Game::DrawGameScene()
 {
+  /*  TODO
   // draw wall
   SDL_SetRenderDrawColor(m_Renderer, 59, 128, 59, 255); // bright orange
   SDL_Rect wallRect {
@@ -350,6 +311,7 @@ void Game::DrawGameScene()
     , HUNTER_HEIGHT
   };
   SDL_RenderFillRect(m_Renderer, &hunterRect);
+  */
 }
 
 void Game::ShutDown()
