@@ -1,14 +1,22 @@
 #include "Player.h"
 #include "SDL2/SDL.h"
+#include "AnimSpriteComponent.h"
+#include "Game.h"
 
 Player::Player(class Game* game)
   : Actor(game)
   , m_Speed(FOX_SPEED)
   , m_Velocity(Vector2(0.0f, 0.0f))
 {
-  Actor::SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
-
   // TODO : create animated sprite component
+  AnimSpriteComponent* animSpriteComponent = new AnimSpriteComponent(this);
+  std::vector<SDL_Texture*> anims = {
+      game->GetTexture("assets/fox01.png")
+    , game->GetTexture("assets/fox02.png")
+    , game->GetTexture("assets/fox03.png")
+    , game->GetTexture("assets/fox04.png")
+  };
+  animSpriteComponent->SetAnimTextures(anims);
 
 }
 
