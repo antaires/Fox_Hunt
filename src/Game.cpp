@@ -183,14 +183,10 @@ void Game::LoadData()
   // create player
   m_Player = new Player(this);
   m_Player->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
-  m_Player->SetScale(1.5f);
+  m_Player->SetScale(0.25f);
 
-  // todo create background actor 
+  // create background actor
 
-  m_WallPos.x = SCREEN_WIDTH/4;
-  m_WallPos.y = SCREEN_HEIGHT/4;
-
-  // create background...
 }
 
 void Game::UnloadData()

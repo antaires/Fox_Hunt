@@ -20,7 +20,6 @@ private:
 
   // Game specific
   Player* m_Player;
-  Vector2 m_WallPos;
 
   std::vector<class Actor*> m_Actors;
   std::vector<class Actor*> m_PendingActors;
