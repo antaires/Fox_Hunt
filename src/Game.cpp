@@ -196,8 +196,25 @@ void Game::LoadData()
   };
   bg->SetBGTextures(bgTexs);
   bg->SetScrollSpeed(0.0f);
-  // if want scrolling and paralax, create more bg's here to attach to actor
 
+  // if want scrolling and paralax, create more bg's here to attach to actor
+  bg = new BackgroundSpriteComponent(temp);
+  bg->SetScreenSize(Vector2(SCREEN_WIDTH, SCREEN_HEIGHT));
+  bgTexs = {
+    GetTexture("assets/fog01.png")
+    , GetTexture("assets/fog01.png")
+  };
+  bg->SetBGTextures(bgTexs);
+  bg->SetScrollSpeed(-50.0f);
+  // fog 2
+  bg = new BackgroundSpriteComponent(temp);
+  bg->SetScreenSize(Vector2(SCREEN_WIDTH, SCREEN_HEIGHT));
+  bgTexs = {
+    GetTexture("assets/fog01.png")
+    , GetTexture("assets/fog01.png")
+  };
+  bg->SetBGTextures(bgTexs);
+  bg->SetScrollSpeed(-70.0f);
 }
 
 void Game::UnloadData()
