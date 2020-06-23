@@ -2,6 +2,7 @@
 #include "SDL2/SDL_image.h"
 #include "Constants.h"
 #include "SpriteComponent.h"
+#include "BackgroundSpriteComponent.h"
 
 #include <algorithm>
 
@@ -186,6 +187,16 @@ void Game::LoadData()
   m_Player->SetScale(0.25f);
 
   // create background actor
+  Actor* temp = new Actor(this);
+  temp->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
+  BackgroundSpriteComponent* bg = new BackgroundSpriteComponent(temp);
+  bg->SetScreenSize(Vector2(SCREEN_WIDTH, SCREEN_HEIGHT));
+  std::vector<SDL_Texture*> bgTexs = {
+    GetTexture("assets/background01.png")
+  };
+  bg->SetBGTextures(bgTexs);
+  bg->SetScrollSpeed(0.0f);
+  // if want scrolling and paralax, create more bg's here to attach to actor
 
 }
 
