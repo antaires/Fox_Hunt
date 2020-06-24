@@ -5,11 +5,26 @@ AnimSpriteComponent::AnimSpriteComponent(class Actor* owner, int drawOrder)
   :SpriteComponent(owner, drawOrder)
   , m_CurrentFrame(0.0f)
   , m_AnimFPS(24.0f)
-{}
+{
+  m_CurrentAnimationClip = "1";
+  m_PreviousAnimationClip = "0";
+}
 
 void AnimSpriteComponent::Update(float deltaTime)
 {
   SpriteComponent::Update(deltaTime);
+
+  // get current animationClip
+  AnimationClip animClip = m_AnimationClips[m_CurrentAnimationClip];
+
+  // if current clip != prevCurrentClip, set current frame based on clip being played
+  if (m_CurrentAnimationClip != m_PreviousAnimationClip)
+  {
+    // get animationClip
+    m_CurrentFrame = animClip.startFrame;
+
+    m_PreviousAnimationClip = m_CurrentAnimationClip;
+  }
 
   if(m_AnimTextures.size() > 0)
   {
@@ -17,10 +32,12 @@ void AnimSpriteComponent::Update(float deltaTime)
     m_CurrentFrame += m_AnimFPS * deltaTime;
 
     // wrap current frame if needed
-    while(m_CurrentFrame >= m_AnimTextures.size())
+    if(m_CurrentFrame > animClip.endFrame)
     {
-      m_CurrentFrame -= m_AnimTextures.size();
+      m_CurrentFrame = animClip.startFrame;
     }
+
+    // TODO handle looping ON / OFF -> use isPlaying bool ?
 
     // set the current texture
     SetTexture(m_AnimTextures[static_cast<int>(m_CurrentFrame)]);
@@ -36,6 +53,18 @@ void AnimSpriteComponent::SetAnimTextures(const std::vector<SDL_Texture*>& textu
     m_CurrentFrame = 0.0f;
     SetTexture(m_AnimTextures[0]);
   }
+}
+
+void AnimSpriteComponent::SetAnimationClip(std::string name, int startFrame, int endFrame, bool isLooping)
+{
+  AnimationClip animationClip = {name, startFrame, endFrame, isLooping};
+  m_AnimationClips[name] = animationClip;
+}
+
+
+void AnimSpriteComponent::SetCurrentAnimation(std::string name)
+{
+  m_CurrentAnimationClip = name;
 }
 
 float AnimSpriteComponent::GetAnimFPS() const { return m_AnimFPS; }

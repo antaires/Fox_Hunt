@@ -8,16 +8,26 @@ Player::Player(class Game* game)
   , m_Speed(FOX_SPEED)
   , m_Velocity(Vector2(0.0f, 0.0f))
 {
-  // TODO : create animated sprite component
-  AnimSpriteComponent* animSpriteComponent = new AnimSpriteComponent(this);
+  m_AnimSpriteComponent = new AnimSpriteComponent(this);
   std::vector<SDL_Texture*> anims = {
-      game->GetTexture("assets/fox01.png")
+      game->GetTexture("assets/fox01.png") // right fox : 0 - 3
     , game->GetTexture("assets/fox02.png")
     , game->GetTexture("assets/fox03.png")
     , game->GetTexture("assets/fox04.png")
+    , game->GetTexture("assets/leftFox01.png") // left fox: 4 - 7
+    , game->GetTexture("assets/leftFox02.png")
+    , game->GetTexture("assets/leftFox01.png")
+    , game->GetTexture("assets/leftFox03.png")
+    , game->GetTexture("assets/downFox01.png")  // down fox: 8
+    , game->GetTexture("assets/upFox01.png")  // up fox : 9
   };
-  animSpriteComponent->SetAnimTextures(anims);
+  m_AnimSpriteComponent->SetAnimTextures(anims);
 
+  // set names and ranges of animations
+  m_AnimSpriteComponent->SetAnimationClip("right", 0, 3, true);
+  m_AnimSpriteComponent->SetAnimationClip("left", 4, 7, true);
+  m_AnimSpriteComponent->SetAnimationClip("down", 8, 8, false);
+  m_AnimSpriteComponent->SetAnimationClip("up", 9, 9, false);
 }
 
 void Player::UpdateActor(float deltaTime)
@@ -35,6 +45,24 @@ void Player::UpdateActor(float deltaTime)
     Actor::ClampToScreen(pos.x, FOX_WIDTH, SCREEN_WIDTH);
   }
   Actor::SetPosition(pos);
+
+  // TODO : play animation based on character direction
+  if (m_Velocity.x < 0)
+  {
+    m_AnimSpriteComponent->SetCurrentAnimation("left");
+  }
+  if (m_Velocity.x > 0)
+  {
+    m_AnimSpriteComponent->SetCurrentAnimation("right");
+  }
+  if (m_Velocity.y > 0 )
+  {
+    m_AnimSpriteComponent->SetCurrentAnimation("down");
+  }
+  if (m_Velocity.y < 0 )
+  {
+    m_AnimSpriteComponent->SetCurrentAnimation("up");
+  }
 }
 
 void Player::ProcessKeyboard(const uint8_t* state)
