@@ -28,6 +28,10 @@ Player::Player(class Game* game)
   m_AnimSpriteComponent->SetAnimationClip("left", 4, 7, true);
   m_AnimSpriteComponent->SetAnimationClip("down", 8, 8, false);
   m_AnimSpriteComponent->SetAnimationClip("up", 9, 9, false);
+  m_AnimSpriteComponent->SetAnimationClip("stillRight", 0, 0, false);
+  m_AnimSpriteComponent->SetAnimationClip("stillLeft", 4, 4, false);
+  m_AnimSpriteComponent->SetAnimationClip("stillUp", 9, 9, false);
+  m_AnimSpriteComponent->SetAnimationClip("stillDown", 8, 8, false);
 }
 
 void Player::UpdateActor(float deltaTime)
@@ -46,23 +50,40 @@ void Player::UpdateActor(float deltaTime)
   }
   Actor::SetPosition(pos);
 
-  // TODO : play animation based on character direction
+  // set animation clip based on player direction
+
+  if (m_Velocity.x == 0 && m_Velocity.y == 0)
+  {
+    // handle still states
+    std::string prev = m_AnimSpriteComponent->GetPreviousAnimationClip();
+    if (prev == "right"){
+      m_AnimSpriteComponent->SetCurrentAnimationClip("stillRight");
+    } else if (prev == "left") {
+      m_AnimSpriteComponent->SetCurrentAnimationClip("stillLeft");
+    } else if (prev == "up") {
+      m_AnimSpriteComponent->SetCurrentAnimationClip("stillUp");
+    } else if (prev == "down"){
+      m_AnimSpriteComponent->SetCurrentAnimationClip("stillDown");
+    }
+  }
+  // handle movement
   if (m_Velocity.x < 0)
   {
-    m_AnimSpriteComponent->SetCurrentAnimation("left");
+    m_AnimSpriteComponent->SetCurrentAnimationClip("left");
   }
   if (m_Velocity.x > 0)
   {
-    m_AnimSpriteComponent->SetCurrentAnimation("right");
+    m_AnimSpriteComponent->SetCurrentAnimationClip("right");
   }
   if (m_Velocity.y > 0 )
   {
-    m_AnimSpriteComponent->SetCurrentAnimation("down");
+    m_AnimSpriteComponent->SetCurrentAnimationClip("down");
   }
   if (m_Velocity.y < 0 )
   {
-    m_AnimSpriteComponent->SetCurrentAnimation("up");
+    m_AnimSpriteComponent->SetCurrentAnimationClip("up");
   }
+
 }
 
 void Player::ProcessKeyboard(const uint8_t* state)

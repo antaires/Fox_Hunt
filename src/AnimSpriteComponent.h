@@ -27,7 +27,8 @@ public:
   void SetAnimTextures(const std::vector<SDL_Texture*>& textures);
   void SetAnimationClip(std::string name, int startFrame, int endFrame, bool isLooping);
 
-  void SetCurrentAnimation(std::string name);
+  void SetCurrentAnimationClip(std::string name);
+  std::string GetPreviousAnimationClip() const;
   float GetAnimFPS() const;
   void SetAnimFPS(float fps);
 };

@@ -34,10 +34,13 @@ void AnimSpriteComponent::Update(float deltaTime)
     // wrap current frame if needed
     if(m_CurrentFrame > animClip.endFrame)
     {
-      m_CurrentFrame = animClip.startFrame;
+      if (animClip.isLooping)
+      {
+        m_CurrentFrame = animClip.startFrame;
+      } else {
+        m_CurrentFrame = animClip.endFrame;
+      }
     }
-
-    // TODO handle looping ON / OFF -> use isPlaying bool ?
 
     // set the current texture
     SetTexture(m_AnimTextures[static_cast<int>(m_CurrentFrame)]);
@@ -62,9 +65,14 @@ void AnimSpriteComponent::SetAnimationClip(std::string name, int startFrame, int
 }
 
 
-void AnimSpriteComponent::SetCurrentAnimation(std::string name)
+void AnimSpriteComponent::SetCurrentAnimationClip(std::string name)
 {
   m_CurrentAnimationClip = name;
+}
+
+std::string AnimSpriteComponent::GetPreviousAnimationClip() const
+{
+  return m_PreviousAnimationClip;
 }
 
 float AnimSpriteComponent::GetAnimFPS() const { return m_AnimFPS; }
