@@ -297,7 +297,6 @@ void Game::GenerateOutput()
   );
   SDL_RenderClear(m_Renderer);
 
-  DrawGameScene(); // TODO needed?
   // Draw all sprite components
   for(auto sprite: m_Sprites)
   {

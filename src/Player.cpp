@@ -51,7 +51,6 @@ void Player::UpdateActor(float deltaTime)
   Actor::SetPosition(pos);
 
   // set animation clip based on player direction
-
   if (m_Velocity.x == 0 && m_Velocity.y == 0)
   {
     // handle still states
