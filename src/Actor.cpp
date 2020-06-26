@@ -40,7 +40,7 @@ void Actor::UpdateComponents(float deltaTime)
 
 void Actor::UpdateActor(float deltaTime){}
 
-Vector3 Actor::GetForward() const
+Vector2 Actor::GetForward() const
 {
   // negate y axis for SDL (where +y is down)
   return Vector2(Math::Cos(m_Rotation), -Math::Sin(m_Rotation));
