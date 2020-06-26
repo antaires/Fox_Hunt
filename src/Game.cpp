@@ -3,6 +3,8 @@
 #include "Constants.h"
 #include "SpriteComponent.h"
 #include "BackgroundSpriteComponent.h"
+#include "TileMapComponent.h"
+
 
 #include <algorithm>
 
@@ -179,28 +181,30 @@ void Game::RemoveActor(Actor* actor)
 // hard coded for now, TODO: load from files and binary
 void Game::LoadData()
 {
-  // TODO : load all textures
+  // load all textures
 
   // create player
   m_Player = new Player(this);
   m_Player->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
   m_Player->SetScale(0.25f);
 
-  // create background actor
+  // create background tile map
+  Actor* tileMapActor = new Actor(this);
+  tileMapActor->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
+  TileMapComponent* tileMapComponent = new TileMapComponent(tileMapActor, 10);
+  // load CSV
+  tileMapComponent->LoadCsv("assets/mapLayer01.csv");
+  // set texture
+  tileMapComponent->SetTextureRowsCols( 24, 8);
+  tileMapComponent->SetTexture(GetTexture("assets/tiles.png"));
+
+
+  // create background actor for scrolling fog
   Actor* temp = new Actor(this);
   temp->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
-  BackgroundSpriteComponent* bg = new BackgroundSpriteComponent(temp);
+  BackgroundSpriteComponent* bg = new BackgroundSpriteComponent(temp, 200);
   bg->SetScreenSize(Vector2(SCREEN_WIDTH, SCREEN_HEIGHT));
   std::vector<SDL_Texture*> bgTexs = {
-    GetTexture("assets/background01.png")
-  };
-  bg->SetBGTextures(bgTexs);
-  bg->SetScrollSpeed(0.0f);
-
-  // if want scrolling and paralax, create more bg's here to attach to actor
-  bg = new BackgroundSpriteComponent(temp);
-  bg->SetScreenSize(Vector2(SCREEN_WIDTH, SCREEN_HEIGHT));
-  bgTexs = {
     GetTexture("assets/fog01.png")
     , GetTexture("assets/fog01.png")
   };
@@ -210,11 +214,13 @@ void Game::LoadData()
   bg = new BackgroundSpriteComponent(temp);
   bg->SetScreenSize(Vector2(SCREEN_WIDTH, SCREEN_HEIGHT));
   bgTexs = {
-    GetTexture("assets/fog01.png")
+      GetTexture("assets/fog01.png")
     , GetTexture("assets/fog01.png")
   };
   bg->SetBGTextures(bgTexs);
   bg->SetScrollSpeed(-70.0f);
+  // if want scrolling and paralax, create more bg's here to attach to temp actor
+
 }
 
 void Game::UnloadData()
