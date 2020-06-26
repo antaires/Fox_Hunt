@@ -26,6 +26,8 @@ public:
   void UpdateComponents(float deltaTime); // updates all components
   virtual void UpdateActor(float deltaTime);
 
+  Vector3 GetForward() const;
+
   State GetState() const;
   void SetState(State state);
   Vector2 GetPosition() const;
