@@ -4,6 +4,7 @@
 #include "InputComponent.h"
 #include "Game.h"
 
+
 Player::Player(class Game* game)
   : Actor(game)
 {
@@ -41,6 +42,8 @@ void Player::UpdateActor(float deltaTime)
 {
   Actor::UpdateActor(deltaTime);
 
+  // TODO place all of this on AnimSpriteComponent, based on isMoving, isFiring, velocity, forwardVector
+  // since NPCs will need this same logic
   bool isMoving = true;
   Vector2 velocity = GetVelocity();
   if (velocity.x == 0 && velocity.y == 0)
@@ -48,10 +51,14 @@ void Player::UpdateActor(float deltaTime)
     isMoving = false;
   }
 
-  Vector2 forwardVector = GetForwardVector();
+  Vector2 forwardVector = Vector2::Normalize(GetForwardVector());
+  Vector2 rightVector = Vector2(1, 0);
+  float angle = Math::Acos(Vector2::Dot(rightVector, forwardVector)); //Math::Atan2(-forwardVector.y, forwardVector.x);
+  bool isAbove = forwardVector.y < 0;
+
   // set animation based on movement and forward vector
   // TODO convert forwardVector to rotation angle, and add animations for vertical movement as well
-  if (forwardVector.x < 0)
+  if (angle > 2)
   {
     if (isMoving)
     {
@@ -60,7 +67,7 @@ void Player::UpdateActor(float deltaTime)
       m_AnimSpriteComponent->SetCurrentAnimationClip("stillLeft");
     }
   }
-  if (forwardVector.x > 0)
+  if (angle < 2)
   {
     if(isMoving)
     {
@@ -69,7 +76,7 @@ void Player::UpdateActor(float deltaTime)
       m_AnimSpriteComponent->SetCurrentAnimationClip("stillRight");
     }
   }
-  if (forwardVector.y > 0 )
+  if ( !isAbove && (angle < 2 && angle > 1) )
   {
     if(isMoving)
     {
@@ -78,7 +85,7 @@ void Player::UpdateActor(float deltaTime)
       m_AnimSpriteComponent->SetCurrentAnimationClip("stillDown");
     }
   }
-  if (forwardVector.y < 0 )
+  if ( isAbove && (angle < 2 && angle > 1) )
   {
     if(isMoving)
     {
