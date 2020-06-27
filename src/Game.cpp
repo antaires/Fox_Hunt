@@ -90,16 +90,27 @@ void Game::ProcessInput()
   }
 
   // get state of keyboard
-  const Uint8* state = SDL_GetKeyboardState(NULL);
+  const Uint8* keyState = SDL_GetKeyboardState(NULL);
 
   // if escape pressed, exit Game RunLoop
-  if (state[SDL_SCANCODE_ESCAPE])
+  if (keyState[SDL_SCANCODE_ESCAPE])
   {
     m_IsRunning = false;
   }
 
-  // handle player input
-  m_Player->ProcessKeyboard(state);
+  // get mouse state
+  int mouseX, mouseY;
+  const uint32_t mouseState = SDL_GetMouseState(&mouseX, &mouseY);
+
+  // handle input
+  m_UpdatingActors = true;
+  for(auto actor: m_Actors)
+  {
+    actor->ProcessInput(keyState);
+    actor->ProcessMouse(mouseState, mouseX, mouseY);
+  }
+  m_UpdatingActors = false;
+  // TODO remove? m_Player->ProcessKeyboard(state);
 }
 
 void Game::UpdateGame()

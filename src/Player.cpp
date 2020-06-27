@@ -1,13 +1,16 @@
 #include "Player.h"
 #include "SDL2/SDL.h"
 #include "AnimSpriteComponent.h"
+#include "InputComponent.h"
 #include "Game.h"
 
 Player::Player(class Game* game)
   : Actor(game)
-  , m_Speed(FOX_SPEED)
-  , m_Velocity(Vector2(0.0f, 0.0f))
 {
+  // set up move component
+  InputComponent* inputComponent = new InputComponent(this);
+  inputComponent->SetClampToScreen(true);
+
   m_AnimSpriteComponent = new AnimSpriteComponent(this);
   std::vector<SDL_Texture*> anims = {
       game->GetTexture("assets/fox01.png") // right fox : 0 - 3
@@ -37,74 +40,54 @@ Player::Player(class Game* game)
 void Player::UpdateActor(float deltaTime)
 {
   Actor::UpdateActor(deltaTime);
-  Vector2 pos = Actor::GetPosition();
-  if (m_Velocity.y != 0)
-  {
-    pos.y += m_Velocity.y * m_Speed * deltaTime;
-    Actor::ClampToScreen(pos.y, FOX_HEIGHT, SCREEN_HEIGHT);
-  }
-  if (m_Velocity.x != 0)
-  {
-    pos.x += m_Velocity.x * m_Speed * deltaTime;
-    Actor::ClampToScreen(pos.x, FOX_WIDTH, SCREEN_WIDTH);
-  }
-  Actor::SetPosition(pos);
 
-  // set animation clip based on player direction
-  if (m_Velocity.x == 0 && m_Velocity.y == 0)
+  bool isMoving = true;
+  Vector2 velocity = GetVelocity();
+  if (velocity.x == 0 && velocity.y == 0)
   {
-    // handle still states
-    std::string prev = m_AnimSpriteComponent->GetPreviousAnimationClip();
-    if (prev == "right"){
-      m_AnimSpriteComponent->SetCurrentAnimationClip("stillRight");
-    } else if (prev == "left") {
+    isMoving = false;
+  }
+
+  Vector2 forwardVector = GetForwardVector();
+  // set animation based on movement and forward vector
+  // TODO convert forwardVector to rotation angle, and add animations for vertical movement as well
+  if (forwardVector.x < 0)
+  {
+    if (isMoving)
+    {
+      m_AnimSpriteComponent->SetCurrentAnimationClip("left");
+    } else {
       m_AnimSpriteComponent->SetCurrentAnimationClip("stillLeft");
-    } else if (prev == "up") {
-      m_AnimSpriteComponent->SetCurrentAnimationClip("stillUp");
-    } else if (prev == "down"){
+    }
+  }
+  if (forwardVector.x > 0)
+  {
+    if(isMoving)
+    {
+      m_AnimSpriteComponent->SetCurrentAnimationClip("right");
+    } else {
+      m_AnimSpriteComponent->SetCurrentAnimationClip("stillRight");
+    }
+  }
+  if (forwardVector.y > 0 )
+  {
+    if(isMoving)
+    {
+      m_AnimSpriteComponent->SetCurrentAnimationClip("down");
+    } else {
       m_AnimSpriteComponent->SetCurrentAnimationClip("stillDown");
     }
   }
-  // handle movement
-  if (m_Velocity.x < 0)
+  if (forwardVector.y < 0 )
   {
-    m_AnimSpriteComponent->SetCurrentAnimationClip("left");
+    if(isMoving)
+    {
+      m_AnimSpriteComponent->SetCurrentAnimationClip("up");
+    } else {
+      m_AnimSpriteComponent->SetCurrentAnimationClip("stillUp");
+    }
   }
-  if (m_Velocity.x > 0)
-  {
-    m_AnimSpriteComponent->SetCurrentAnimationClip("right");
-  }
-  if (m_Velocity.y > 0 )
-  {
-    m_AnimSpriteComponent->SetCurrentAnimationClip("down");
-  }
-  if (m_Velocity.y < 0 )
-  {
-    m_AnimSpriteComponent->SetCurrentAnimationClip("up");
-  }
-
 }
 
 void Player::ProcessKeyboard(const uint8_t* state)
-{
-  m_Velocity.x = 0.0f; m_Velocity.y = 0.0f;
-
-  if (state[SDL_SCANCODE_W])
-  {
-    m_Velocity.y -= 1;
-  }
-  if (state[SDL_SCANCODE_S])
-  {
-    m_Velocity.y += 1;
-  }
-  if (state[SDL_SCANCODE_A])
-  {
-    m_Velocity.x -= 1;
-  }
-  if (state[SDL_SCANCODE_D])
-  {
-    m_Velocity.x += 1;
-  }
-}
-
-float Player::GetSpeed() const { return m_Speed; }
+{}

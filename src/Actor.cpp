@@ -6,6 +6,8 @@ Actor::Actor(class Game* game)
   , m_Position(Vector2(0.0f, 0.0f))
   , m_Scale(1.0f)
   , m_Rotation(0.0f)
+  , m_Velocity(Vector2(0.0f, 0.0f))
+  , m_ForwardVector(Vector2(0.0f, 0.0f))
   , m_Game(game)
 {
   m_Game->AddActor(this);
@@ -40,6 +42,34 @@ void Actor::UpdateComponents(float deltaTime)
 
 void Actor::UpdateActor(float deltaTime){}
 
+void Actor::ProcessInput(const uint8_t* keyState)
+{
+  // called in Game not overridable
+  if (m_State == E_Active)
+  {
+    for(auto comp: m_Components)
+    {
+      comp->ProcessInput(keyState);
+    }
+    ActorInput(keyState);
+  }
+}
+
+void Actor::ProcessMouse(const uint32_t mouseState, const int x, const int y)
+{
+  // calle din game not overridable
+  if (m_State == E_Active)
+  {
+    for(auto comp: m_Components)
+    {
+      comp->ProcessMouse(mouseState, x, y);
+    }
+  }
+}
+
+void Actor::ActorInput(const uint8_t* keyState)
+{}
+
 Vector2 Actor::GetForward() const
 {
   // negate y axis for SDL (where +y is down)
@@ -62,6 +92,14 @@ void Actor::SetRotation(float rotation){m_Rotation = rotation;}
 float Actor::GetScale() const { return m_Scale; }
 
 void Actor::SetScale(float scale) { m_Scale = scale; }
+
+Vector2 Actor::GetVelocity() const { return m_Velocity; }
+
+void Actor::SetVelocity(Vector2 velocity) { m_Velocity = velocity; }
+
+Vector2 Actor::GetForwardVector() const { return m_ForwardVector; }
+
+void Actor::SetForwardVector(Vector2 forwardVector) { m_ForwardVector = forwardVector; }
 
 class Game* Actor::GetGame(){return m_Game;}
 

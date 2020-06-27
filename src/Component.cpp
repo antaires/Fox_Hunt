@@ -16,4 +16,10 @@ Component::~Component()
 void Component::Update(float deltaTime)
 {}
 
+void Component::ProcessInput(const uint8_t* keyState)
+{}
+
+void Component::ProcessMouse(const uint32_t mouseState, const int x, const int y)
+{}
+
 int Component::GetUpdateOrder() const {return m_UpdateOrder;}

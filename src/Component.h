@@ -11,5 +11,7 @@ public:
   Component(class Actor* owner, int updateOrder = 100);
   virtual ~Component();
   virtual void Update(float deltaTime);
+  virtual void ProcessInput(const uint8_t* keyState);
+  virtual void ProcessMouse(const uint32_t mouseState, const int x, const int y);
   int GetUpdateOrder() const;
 };
