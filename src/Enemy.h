@@ -6,9 +6,11 @@ class Enemy: public Actor
 {
 private:
   class AnimSpriteComponent* m_AnimSpriteComponent;
-
+  class Player* m_PlayerPtr; // TODO add safety features
+  class CircleComponent* m_Circle;
 public:
   Enemy(class Game* game);
   void UpdateActor(float deltaTime) override;
+  void SetPlayerPtr(class Player* playerPtr);
   // void ProcessKeyboard(const uint8_t* state);
 };

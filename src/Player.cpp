@@ -8,14 +8,15 @@
 
 Player::Player(class Game* game)
   : Actor(game)
+  , m_Circle(nullptr)
 {
   // set up move component
   InputComponent* inputComponent = new InputComponent(this);
   inputComponent->SetClampToScreen(true);
 
   // set up circle component for collisions
-  CircleComponent* circleComponent = new CircleComponent(this);
-  circleComponent->SetRadius(FOX_WIDTH/2);
+  m_Circle = new CircleComponent(this);
+  m_Circle->SetRadius(FOX_WIDTH/2);
 
   // set up animation component
   m_AnimSpriteComponent = new AnimSpriteComponent(this);
@@ -104,3 +105,8 @@ void Player::UpdateActor(float deltaTime)
 
 void Player::ProcessKeyboard(const uint8_t* state)
 {}
+
+class CircleComponent* Player::GetCircle() const
+{
+  return m_Circle;
+}

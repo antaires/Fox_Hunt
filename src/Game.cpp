@@ -199,6 +199,7 @@ void Game::LoadData()
 
   // create enemy (TODO : spawn multiple enemies)
   m_Enemy = new Enemy(this);
+  m_Enemy->SetPlayerPtr(m_Player);
   m_Enemy->SetPosition(Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT/4));
   m_Enemy->SetScale(0.25f);
 

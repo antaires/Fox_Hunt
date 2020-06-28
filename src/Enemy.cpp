@@ -2,18 +2,22 @@
 #include "SDL2/SDL.h"
 #include "AnimSpriteComponent.h"
 #include "CircleComponent.h"
+#include "CollisionDetection.h"
+#include "Player.h"
 #include "Game.h"
 
 // TODO: add AI component for movement
 
 Enemy::Enemy(class Game* game)
   : Actor(game)
+  , m_PlayerPtr(nullptr)
+  , m_Circle(nullptr)
 {
   // TODO set up AI component (which extends Move Component)
 
   // set up circle component for collisions
-  CircleComponent* circleComponent = new CircleComponent(this);
-  circleComponent->SetRadius(HUNTER_WIDTH/2);
+  m_Circle = new CircleComponent(this);
+  m_Circle->SetRadius(HUNTER_WIDTH/2);
 
   // set up animation component
   m_AnimSpriteComponent = new AnimSpriteComponent(this);
@@ -98,6 +102,26 @@ void Enemy::UpdateActor(float deltaTime)
       m_AnimSpriteComponent->SetCurrentAnimationClip("stillUp");
     }
   }
+
+
+  // check if collide with Player - if yes then kill player
+  if(m_PlayerPtr != nullptr)
+  {
+
+    if( CollisionDetection::HasCollision(m_Circle, m_PlayerPtr->GetCircle()) )
+    {
+      m_PlayerPtr->SetState(Actor::E_Dead);
+    }
+
+
+  }
+
+
+}
+
+void Enemy::SetPlayerPtr(class Player* playerPtr)
+{
+  m_PlayerPtr = playerPtr;
 }
 
 // void Enemy::ProcessKeyboard(const uint8_t* state){}
