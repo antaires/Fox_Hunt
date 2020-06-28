@@ -1,21 +1,19 @@
-#include "Player.h"
+#include "Enemy.h"
 #include "SDL2/SDL.h"
 #include "AnimSpriteComponent.h"
-#include "InputComponent.h"
 #include "CircleComponent.h"
 #include "Game.h"
 
+// TODO: add AI component for movement
 
-Player::Player(class Game* game)
+Enemy::Enemy(class Game* game)
   : Actor(game)
 {
-  // set up move component
-  InputComponent* inputComponent = new InputComponent(this);
-  inputComponent->SetClampToScreen(true);
+  // TODO set up AI component (which extends Move Component)
 
   // set up circle component for collisions
   CircleComponent* circleComponent = new CircleComponent(this);
-  circleComponent->SetRadius(FOX_WIDTH/2);
+  circleComponent->SetRadius(HUNTER_WIDTH/2);
 
   // set up animation component
   m_AnimSpriteComponent = new AnimSpriteComponent(this);
@@ -44,7 +42,7 @@ Player::Player(class Game* game)
   m_AnimSpriteComponent->SetAnimationClip("stillDown", 8, 8, false);
 }
 
-void Player::UpdateActor(float deltaTime)
+void Enemy::UpdateActor(float deltaTime)
 {
   Actor::UpdateActor(deltaTime);
 
@@ -102,5 +100,4 @@ void Player::UpdateActor(float deltaTime)
   }
 }
 
-void Player::ProcessKeyboard(const uint8_t* state)
-{}
+// void Enemy::ProcessKeyboard(const uint8_t* state){}

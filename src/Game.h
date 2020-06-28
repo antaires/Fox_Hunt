@@ -7,6 +7,7 @@
 
 #include "Actor.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "SpriteComponent.h"
 
 class Game {
@@ -20,6 +21,7 @@ private:
 
   // Game specific
   Player* m_Player;
+  Enemy* m_Enemy; // TODO make it a list? 
 
   std::vector<class Actor*> m_Actors;
   std::vector<class Actor*> m_PendingActors;
