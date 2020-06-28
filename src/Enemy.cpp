@@ -8,6 +8,8 @@
 
 // TODO: add AI component for movement
 
+#include <iostream> // remove
+
 Enemy::Enemy(class Game* game)
   : Actor(game)
   , m_PlayerPtr(nullptr)
@@ -15,9 +17,11 @@ Enemy::Enemy(class Game* game)
 {
   // TODO set up AI component (which extends Move Component)
 
+  SetScale(0.25f);
+  
   // set up circle component for collisions
   m_Circle = new CircleComponent(this);
-  m_Circle->SetRadius(HUNTER_WIDTH/2);
+  m_Circle->SetRadius(HUNTER_WIDTH/2 * GetScale());
 
   // set up animation component
   m_AnimSpriteComponent = new AnimSpriteComponent(this);
@@ -110,8 +114,13 @@ void Enemy::UpdateActor(float deltaTime)
 
     if( CollisionDetection::HasCollision(m_Circle, m_PlayerPtr->GetCircle()) )
     {
-      m_PlayerPtr->SetState(Actor::E_Dead);
+      // caused seg fault
+      // m_PlayerPtr->SetState(Actor::E_Dead);
+      std::cout<<"\nCollision";
+    } else {
+      std::cout<<"\n----";
     }
+
 
 
   }

@@ -195,13 +195,11 @@ void Game::LoadData()
   // create player
   m_Player = new Player(this);
   m_Player->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
-  m_Player->SetScale(0.25f);
 
   // create enemy (TODO : spawn multiple enemies)
   m_Enemy = new Enemy(this);
   m_Enemy->SetPlayerPtr(m_Player);
   m_Enemy->SetPosition(Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT/4));
-  m_Enemy->SetScale(0.25f);
 
   // create background tile map
   Actor* tileMapActor = new Actor(this);

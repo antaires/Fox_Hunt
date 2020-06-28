@@ -10,13 +10,15 @@ Player::Player(class Game* game)
   : Actor(game)
   , m_Circle(nullptr)
 {
+  SetScale(0.25f);
+
   // set up move component
   InputComponent* inputComponent = new InputComponent(this);
   inputComponent->SetClampToScreen(true);
 
   // set up circle component for collisions
   m_Circle = new CircleComponent(this);
-  m_Circle->SetRadius(FOX_WIDTH/2);
+  m_Circle->SetRadius(FOX_WIDTH/2 * GetScale());
 
   // set up animation component
   m_AnimSpriteComponent = new AnimSpriteComponent(this);
