@@ -5,6 +5,7 @@
 #include "CircleComponent.h"
 #include "Game.h"
 
+#include <iostream> // remove
 
 Player::Player(class Game* game)
   : Actor(game)
@@ -15,10 +16,6 @@ Player::Player(class Game* game)
   // set up move component
   InputComponent* inputComponent = new InputComponent(this);
   inputComponent->SetClampToScreen(true);
-
-  // set up circle component for collisions
-  m_Circle = new CircleComponent(this);
-  m_Circle->SetRadius(FOX_WIDTH/2 * GetScale());
 
   // set up animation component
   m_AnimSpriteComponent = new AnimSpriteComponent(this);
@@ -45,6 +42,14 @@ Player::Player(class Game* game)
   m_AnimSpriteComponent->SetAnimationClip("stillLeft", 4, 4, false);
   m_AnimSpriteComponent->SetAnimationClip("stillUp", 9, 9, false);
   m_AnimSpriteComponent->SetAnimationClip("stillDown", 8, 8, false);
+
+  // set actor heigth / width from texture and scale
+  SetHeight(m_AnimSpriteComponent->GetTextureHeight() * GetScale());
+  SetWidth(m_AnimSpriteComponent->GetTextureWidth() * GetScale());
+
+  // set up circle component for collisions
+  m_Circle = new CircleComponent(this);
+  m_Circle->SetRadius( m_AnimSpriteComponent->GetTextureWidth() / 2 * GetScale());
 }
 
 void Player::UpdateActor(float deltaTime)
@@ -103,6 +108,8 @@ void Player::UpdateActor(float deltaTime)
       m_AnimSpriteComponent->SetCurrentAnimationClip("stillUp");
     }
   }
+
+  // TODO : if player state is Actor::E_Dead then set animation to death
 }
 
 void Player::ProcessKeyboard(const uint8_t* state)

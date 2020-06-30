@@ -8,6 +8,8 @@ Actor::Actor(class Game* game)
   , m_Rotation(0.0f)
   , m_Velocity(Vector2(0.0f, 0.0f))
   , m_ForwardVector(Vector2(0.0f, 0.0f))
+  , m_Width(0)
+  , m_Height(0)
   , m_Game(game)
 {
   m_Game->AddActor(this);
@@ -100,6 +102,14 @@ void Actor::SetVelocity(Vector2 velocity) { m_Velocity = velocity; }
 Vector2 Actor::GetForwardVector() const { return m_ForwardVector; }
 
 void Actor::SetForwardVector(Vector2 forwardVector) { m_ForwardVector = forwardVector; }
+
+float Actor::GetHeight() const { return m_Height;}
+
+float Actor::GetWidth() const { return m_Width; }
+
+void Actor::SetHeight(float height) { m_Height = height;}
+
+void Actor::SetWidth(float width) { m_Width = width; }
 
 class Game* Actor::GetGame(){return m_Game;}
 

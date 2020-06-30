@@ -20,6 +20,9 @@ private:
   Vector2 m_Velocity;
   Vector2 m_ForwardVector;
 
+  float m_Width;
+  float m_Height;
+
   class Game* m_Game;
 
   std::vector<class Component*> m_Components; // sorted by update order
@@ -48,6 +51,10 @@ public:
   void SetVelocity(Vector2 velocity);
   Vector2 GetForwardVector() const;
   void SetForwardVector(Vector2 forwardVector);
+  float GetHeight() const;
+  float GetWidth() const;
+  void SetHeight(float height);
+  void SetWidth(float width);
   class Game* GetGame();
 
   void AddComponent(class Component* component);

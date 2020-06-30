@@ -21,7 +21,7 @@ private:
 
   // Game specific
   Player* m_Player;
-  Enemy* m_Enemy; // TODO make it a list? 
+  Enemy* m_Enemy; // TODO make it a list?
 
   std::vector<class Actor*> m_Actors;
   std::vector<class Actor*> m_PendingActors;
@@ -30,6 +30,7 @@ private:
 
   void ProcessInput();
   void UpdateGame();
+  void HandleCollisions();
   void GenerateOutput();
 
   void DrawGameScene();

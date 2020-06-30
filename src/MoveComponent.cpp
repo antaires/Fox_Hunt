@@ -18,7 +18,7 @@ void MoveComponent::Update(float deltaTime)
     pos.y += m_Velocity.y * m_ForwardSpeed * deltaTime;
     if (m_ClampToScreen)
     {
-      m_Owner->ClampToScreen(pos.y, FOX_HEIGHT, SCREEN_HEIGHT);
+      m_Owner->ClampToScreen(pos.y, m_Owner->GetHeight(), SCREEN_HEIGHT);
     }
   }
   if (m_Velocity.x != 0)
@@ -26,7 +26,7 @@ void MoveComponent::Update(float deltaTime)
     pos.x += m_Velocity.x * m_ForwardSpeed * deltaTime;
     if (m_ClampToScreen)
     {
-      m_Owner->ClampToScreen(pos.x, FOX_WIDTH, SCREEN_WIDTH);
+      m_Owner->ClampToScreen(pos.x, m_Owner->GetWidth(), SCREEN_WIDTH);
     }
   }
   m_Owner->SetVelocity(m_Velocity); // animation comp uses this variable

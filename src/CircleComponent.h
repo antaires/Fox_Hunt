@@ -11,6 +11,4 @@ public:
   void SetRadius(float radius);
   float GetRadius() const;
   const Vector2& GetCenter() const;
-
-  bool Intersect(const CircleComponent& a, const CircleComponent& b);
 };

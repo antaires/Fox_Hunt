@@ -3,9 +3,12 @@
 #include "Constants.h"
 #include "SpriteComponent.h"
 #include "BackgroundSpriteComponent.h"
+#include "CollisionDetection.h"
 #include "TileMapComponent.h"
 
 #include <algorithm>
+
+#include <iostream> // remove
 
 Game::Game()
   : m_Window(nullptr)
@@ -68,6 +71,7 @@ void Game::RunLoop()
   {
     ProcessInput();
     UpdateGame();
+    HandleCollisions();
     GenerateOutput();
   }
 }
@@ -154,8 +158,28 @@ void Game::UpdateGame()
   // delete dead actors
   for(auto actor : deadActors)
   {
-    delete actor; // TODO is this the safe way?
+    // TODO delete properly from actors
+    auto it = std::find(m_Actors.begin(), m_Actors.end(), actor);
+    if (it != m_Actors.end())
+    {
+      m_Actors.erase(it);
+    }
   }
+}
+
+void Game::HandleCollisions()
+{
+  // player against enemy (ies)
+  // check if collide with Player - if yes then kill player
+  if(m_Player != nullptr && m_Enemy != nullptr)
+  {
+    if( CollisionDetection::HasCollision(m_Enemy->GetCircle(), m_Player->GetCircle()) )
+    {
+      m_Player->SetState(Actor::E_Dead);
+    }
+  }
+
+  // collisions with players / walls 
 }
 
 void Game::AddActor(Actor* actor)
@@ -193,12 +217,11 @@ void Game::LoadData()
   // load all textures
 
   // create player
-  m_Player = new Player(this);
+  m_Player = new Player(this); // scale set inside class
   m_Player->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
 
   // create enemy (TODO : spawn multiple enemies)
-  m_Enemy = new Enemy(this);
-  m_Enemy->SetPlayerPtr(m_Player);
+  m_Enemy = new Enemy(this); // scale set inside class
   m_Enemy->SetPosition(Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT/4));
 
   // create background tile map
