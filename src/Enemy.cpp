@@ -18,28 +18,19 @@ Enemy::Enemy(class Game* game)
   // set up animation component
   m_AnimSpriteComponent = new AnimSpriteComponent(this);
   std::vector<SDL_Texture*> anims = {
-      game->GetTexture("assets/fox01.png") // right fox : 0 - 3
-    , game->GetTexture("assets/fox02.png")
-    , game->GetTexture("assets/fox03.png")
-    , game->GetTexture("assets/fox04.png")
-    , game->GetTexture("assets/leftFox01.png") // left fox: 4 - 7
-    , game->GetTexture("assets/leftFox02.png")
-    , game->GetTexture("assets/leftFox01.png")
-    , game->GetTexture("assets/leftFox03.png")
-    , game->GetTexture("assets/downFox01.png")  // down fox: 8
-    , game->GetTexture("assets/upFox01.png")  // up fox : 9
+      game->GetTexture("assets/hunter01.png") // right fox : 0 - 3
   };
   m_AnimSpriteComponent->SetAnimTextures(anims);
 
   // set names and ranges of animations
-  m_AnimSpriteComponent->SetAnimationClip("right", 0, 3, true);
-  m_AnimSpriteComponent->SetAnimationClip("left", 4, 7, true);
-  m_AnimSpriteComponent->SetAnimationClip("down", 8, 8, false);
-  m_AnimSpriteComponent->SetAnimationClip("up", 9, 9, false);
+  m_AnimSpriteComponent->SetAnimationClip("right", 0, 0, true);
+  m_AnimSpriteComponent->SetAnimationClip("left", 0, 0, true);
+  m_AnimSpriteComponent->SetAnimationClip("down", 0, 0, false);
+  m_AnimSpriteComponent->SetAnimationClip("up", 0, 0, false);
   m_AnimSpriteComponent->SetAnimationClip("stillRight", 0, 0, false);
-  m_AnimSpriteComponent->SetAnimationClip("stillLeft", 4, 4, false);
-  m_AnimSpriteComponent->SetAnimationClip("stillUp", 9, 9, false);
-  m_AnimSpriteComponent->SetAnimationClip("stillDown", 8, 8, false);
+  m_AnimSpriteComponent->SetAnimationClip("stillLeft", 0, 0, false);
+  m_AnimSpriteComponent->SetAnimationClip("stillUp", 0, 0, false);
+  m_AnimSpriteComponent->SetAnimationClip("stillDown", 0, 0, false);
 
   // set actor heigth / width from texture and scale
   SetHeight(m_AnimSpriteComponent->GetTextureHeight() * GetScale());
