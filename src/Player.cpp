@@ -12,7 +12,7 @@ Player::Player(class Game* game)
   : Actor(game)
   , m_Circle(nullptr)
 {
-  SetScale(0.25f);
+  SetScale(0.1f);
 
   // set up move component
   m_InputComponent = new InputComponent(this);
