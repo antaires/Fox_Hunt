@@ -239,14 +239,14 @@ void Game::LoadData()
   }
 
   // create path map (barriers and walls)
-  m_Map = new Map("assets/mapLayer01.csv");
+  m_Map = new Map("assets/testMap01.csv");
 
   // create background tile map
   Actor* tileMapActor = new Actor(this);
   tileMapActor->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
   TileMapComponent* tileMapComponent = new TileMapComponent(tileMapActor, 10);
   // load CSV
-  tileMapComponent->LoadCsv("assets/mapLayer01.csv");
+  tileMapComponent->LoadCsv("assets/testMap01.csv");
   // set texture
   tileMapComponent->SetTextureRowsCols( 24, 8);
   tileMapComponent->SetTexture(GetTexture("assets/tiles.png"));

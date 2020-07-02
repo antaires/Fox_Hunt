@@ -46,6 +46,7 @@ bool Map::LoadCsv(std::string fileName)
   }
 
   fin.close();
+
   return true;
 }
 
@@ -55,12 +56,18 @@ bool Map::CollidesWithBarrier(Vector2 position)
   int i = std::ceil((position.y * m_Rows) / SCREEN_HEIGHT);
   int j = std::ceil((position.x * m_Cols) / SCREEN_WIDTH);
 
-  int cell = csv.at(m_Cols * i + j);
-
-  if (cell == -1 || cell == 0)
+  int index = m_Cols * i + j;
+  if (index < csv.size())
   {
-    // no collision, occupied cell is empty
-    return false;
+    int cell = csv.at(index);
+
+    std::cout<<"\n x:"<<position.x<<" y:"<<position.y<<" i:"<<i<<" j:"<<j<<" cell: "<<cell;
+
+    if (cell == -1 || cell == 0)
+    {
+      // no collision, occupied cell is empty
+      return false;
+    }
   }
 
   return true;
