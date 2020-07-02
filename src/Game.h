@@ -18,6 +18,7 @@ private:
   bool m_IsRunning;
   bool m_UpdatingActors;
   Uint32 m_TicksCount;
+  class Map* m_Map;
 
   // Game specific
   Player* m_Player;
@@ -45,12 +46,15 @@ public:
   void RunLoop();
   void ShutDown();
 
-  std::vector<Enemy*> GetEnemies(); // TODO is this const? 
+  std::vector<Enemy*> GetEnemies(); // TODO is this const?
 
   void AddActor(class Actor* actor);
   void RemoveActor(class Actor* actor);
   void AddSprite(class SpriteComponent* sprite);
   void RemoveSprite(class SpriteComponent* sprite);
+  void SetMap(class Map* map);
 
   SDL_Texture* GetTexture(const std::string& fileName);
+
+  bool CollidesWithBarrier(Vector2 position);
 };

@@ -61,4 +61,5 @@ public:
   void RemoveComponent(class Component* component);
 
   void ClampToScreen(float& pos, int objHeight, int limit);
+  bool CollidesWithBarrier(Vector2 position);
 };

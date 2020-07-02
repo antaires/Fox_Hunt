@@ -144,3 +144,8 @@ void Actor::ClampToScreen(float& pos, int objHeight, int limit)
   if (pos < objHeight/2.0f){pos = objHeight/2.0f;}
   if (pos > limit - (objHeight / 2)){pos = limit - (objHeight/2);}
 }
+
+bool Actor::CollidesWithBarrier(Vector2 position)
+{
+  return m_Game->CollidesWithBarrier(position);
+}

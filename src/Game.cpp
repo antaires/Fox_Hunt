@@ -5,6 +5,7 @@
 #include "BackgroundSpriteComponent.h"
 #include "CollisionDetection.h"
 #include "TileMapComponent.h"
+#include "Map.h"
 
 #include <algorithm>
 
@@ -16,6 +17,7 @@ Game::Game()
   , m_IsRunning(true)
   , m_UpdatingActors(false)
   , m_TicksCount(0)
+  , m_Map(nullptr)
   , m_Player(nullptr)
   // TODO consider setting enemy vector initial size ...
 {}
@@ -236,6 +238,9 @@ void Game::LoadData()
     m_Enemies.push_back(enemy);
   }
 
+  // create path map (barriers and walls)
+  m_Map = new Map("assets/mapLayer01.csv");
+
   // create background tile map
   Actor* tileMapActor = new Actor(this);
   tileMapActor->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
@@ -245,7 +250,6 @@ void Game::LoadData()
   // set texture
   tileMapComponent->SetTextureRowsCols( 24, 8);
   tileMapComponent->SetTexture(GetTexture("assets/tiles.png"));
-
 
   // create background actor for scrolling fog
   Actor* temp = new Actor(this);
@@ -398,6 +402,11 @@ void Game::DrawGameScene()
 std::vector<Enemy*> Game::GetEnemies()
 {
   return m_Enemies;
+}
+
+bool Game::CollidesWithBarrier(Vector2 position)
+{
+  return m_Map->CollidesWithBarrier(position);
 }
 
 void Game::ShutDown()

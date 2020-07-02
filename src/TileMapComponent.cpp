@@ -14,7 +14,7 @@ TileMapComponent::TileMapComponent(class Actor* owner, int drawOrder)
 
 bool TileMapComponent::LoadCsv(std::string fileName)
 {
-  std::ifstream fin("assets/mapLayer01.csv", std::ios::in);
+  std::ifstream fin(fileName, std::ios::in);
 
   if (!fin)
   {
