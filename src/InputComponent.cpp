@@ -13,6 +13,7 @@ InputComponent::InputComponent(class Actor* owner)
   , m_RightKey(SDL_SCANCODE_D)
   , m_ClockwiseKey(SDL_SCANCODE_K) // not currently used
   , m_CounterClockwiseKey(SDL_SCANCODE_L)
+  , m_ShotTimer(0)
 {}
 
 void InputComponent::ProcessInput(const uint8_t* keyState)
@@ -52,6 +53,11 @@ void InputComponent::ProcessInput(const uint8_t* keyState)
   */
 }
 
+void InputComponent::DecrementShotTimer(float deltaTime)
+{
+  m_ShotTimer -= deltaTime;
+}
+
 void InputComponent::ProcessMouse(const uint32_t mouseState, const int x, const int y)
 {
   // TODO simplify
@@ -60,12 +66,18 @@ void InputComponent::ProcessMouse(const uint32_t mouseState, const int x, const 
   Vector2 forwardVector = mousePos - pos;
   SetForwardVector(forwardVector);
 
-  // TODO handle mouse clicks here using mouseState
-  SDL_PumpEvents();
-  if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-      // shoot : TODO add countdown timer for shooting using delta time
-      forwardVector.Normalize();
-      Bullet* bullet = new Bullet(m_Owner->GetGame(), forwardVector);
-      bullet->SetPosition(m_Owner->GetPosition());
-  }
+  // handle mouse clicks here using mouseState
+    SDL_PumpEvents();
+    if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT))
+    {
+      if (m_ShotTimer <= 0)
+      {
+        forwardVector.Normalize();
+        forwardVector.x *= BULLET_SPEED;
+        forwardVector.y *= BULLET_SPEED;
+        Bullet* bullet = new Bullet(m_Owner->GetGame(), forwardVector);
+        bullet->SetPosition(m_Owner->GetPosition());
+        m_ShotTimer = PLAYER_SHOOT_TIMER;
+      }
+    }
 }

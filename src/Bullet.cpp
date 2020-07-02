@@ -5,8 +5,6 @@
 #include "CircleComponent.h"
 #include "Game.h"
 
-#include <iostream> // todo remove
-
 // bullet class for player to hit and kill enemies
 Bullet::Bullet(class Game* game, Vector2 forwardVector)
   :Actor(game)
@@ -14,7 +12,7 @@ Bullet::Bullet(class Game* game, Vector2 forwardVector)
     SetScale(0.05);
 
     // set up sprite component
-    m_SpriteComponent = new SpriteComponent(this);
+    m_SpriteComponent = new SpriteComponent(this, 80);
     SDL_Texture* sprite = GetGame()->GetTexture("assets/playerBullet01.png");
     m_SpriteComponent->SetTexture(sprite);
 
@@ -29,8 +27,6 @@ Bullet::Bullet(class Game* game, Vector2 forwardVector)
 
 void Bullet::UpdateActor(float deltaTime)
 {
-  std::cout<<"\nbullet velocity: "<< GetVelocity().x <<" "<< GetVelocity().y;
-
   // do you hit an enemy?
   for(auto enemy : GetGame()->GetEnemies())
   {

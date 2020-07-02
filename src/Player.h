@@ -7,6 +7,7 @@ class Player: public Actor
 private:
   class AnimSpriteComponent* m_AnimSpriteComponent;
   class CircleComponent* m_Circle;
+  class InputComponent* m_InputComponent;
 public:
   Player(class Game* game);
   void UpdateActor(float deltaTime) override;

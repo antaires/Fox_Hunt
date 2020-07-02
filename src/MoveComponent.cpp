@@ -20,8 +20,8 @@ void MoveComponent::Update(float deltaTime)
     {
       m_Owner->ClampToScreen(pos.y, m_Owner->GetHeight(), SCREEN_HEIGHT);
     } else {
-      // destroy
-      m_Owner->SetState(Actor::E_Dead);
+      // destroy if offscreen
+
     }
   }
   if (m_Velocity.x != 0)
@@ -32,7 +32,6 @@ void MoveComponent::Update(float deltaTime)
       m_Owner->ClampToScreen(pos.x, m_Owner->GetWidth(), SCREEN_WIDTH);
     } else {
       // destroy
-      m_Owner->SetState(Actor::E_Dead);
     }
   }
 

@@ -15,8 +15,12 @@ private:
   int m_RightKey;
   int m_ClockwiseKey; // currently not used, using mouse position
   int m_CounterClockwiseKey;
+
+  float m_ShotTimer;
 public:
   InputComponent(class Actor* owner);
   void ProcessInput(const uint8_t* keyState) override;
   void ProcessMouse(const uint32_t mouseState, const int x, const int y) override;
+
+  void DecrementShotTimer(float deltaTime);
 };

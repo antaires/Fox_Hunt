@@ -15,8 +15,8 @@ Player::Player(class Game* game)
   SetScale(0.25f);
 
   // set up move component
-  InputComponent* inputComponent = new InputComponent(this);
-  inputComponent->SetClampToScreen(true);
+  m_InputComponent = new InputComponent(this);
+  m_InputComponent->SetClampToScreen(true);
 
   // set up animation component
   m_AnimSpriteComponent = new AnimSpriteComponent(this);
@@ -56,6 +56,8 @@ Player::Player(class Game* game)
 void Player::UpdateActor(float deltaTime)
 {
   Actor::UpdateActor(deltaTime);
+
+  m_InputComponent->DecrementShotTimer(deltaTime);
 
   // TODO place all of this on AnimSpriteComponent, based on isMoving, isFiring, velocity, forwardVector
   // since NPCs will need this same logic
