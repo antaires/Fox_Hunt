@@ -64,6 +64,7 @@ void InputComponent::ProcessMouse(const uint32_t mouseState, const int x, const 
   SDL_PumpEvents();
   if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
       // shoot : TODO add countdown timer for shooting using delta time
+      forwardVector.Normalize();
       Bullet* bullet = new Bullet(m_Owner->GetGame(), forwardVector);
       bullet->SetPosition(m_Owner->GetPosition());
   }
