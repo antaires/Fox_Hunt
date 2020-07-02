@@ -1,4 +1,6 @@
 #include "InputComponent.h"
+#include "Bullet.h"
+
 #include <SDL2/SDL.h>
 
 InputComponent::InputComponent(class Actor* owner)
@@ -59,4 +61,10 @@ void InputComponent::ProcessMouse(const uint32_t mouseState, const int x, const 
   SetForwardVector(forwardVector);
 
   // TODO handle mouse clicks here using mouseState
+  SDL_PumpEvents();
+  if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+      // shoot : TODO add countdown timer for shooting using delta time
+      Bullet* bullet = new Bullet(m_Owner->GetGame(), forwardVector);
+      bullet->SetPosition(m_Owner->GetPosition());
+  }
 }

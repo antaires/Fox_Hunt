@@ -3,6 +3,7 @@
 #include "AnimSpriteComponent.h"
 #include "InputComponent.h"
 #include "CircleComponent.h"
+#include "Bullet.h"
 #include "Game.h"
 
 #include <iostream> // remove

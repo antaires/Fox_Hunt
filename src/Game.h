@@ -21,7 +21,8 @@ private:
 
   // Game specific
   Player* m_Player;
-  Enemy* m_Enemy; // TODO make it a list?
+  std::vector<Enemy*> m_Enemies;
+
 
   std::vector<class Actor*> m_Actors;
   std::vector<class Actor*> m_PendingActors;
@@ -43,6 +44,8 @@ public:
   bool Initialize();
   void RunLoop();
   void ShutDown();
+
+  std::vector<Enemy*> GetEnemies(); // TODO is this const? 
 
   void AddActor(class Actor* actor);
   void RemoveActor(class Actor* actor);

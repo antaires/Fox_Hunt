@@ -17,6 +17,7 @@ Game::Game()
   , m_UpdatingActors(false)
   , m_TicksCount(0)
   , m_Player(nullptr)
+  // TODO consider setting enemy vector initial size ...
 {}
 
 bool Game::Initialize()
@@ -171,15 +172,22 @@ void Game::HandleCollisions()
 {
   // player against enemy (ies)
   // check if collide with Player - if yes then kill player
-  if(m_Player != nullptr && m_Enemy != nullptr)
+  if(m_Player != nullptr && m_Player->GetState() == Actor::E_Active)
   {
-    if( CollisionDetection::HasCollision(m_Enemy->GetCircle(), m_Player->GetCircle()) )
+    for(auto enemy : m_Enemies)
     {
-      m_Player->SetState(Actor::E_Dead);
+      if (enemy != nullptr && enemy->GetState() == Actor::E_Active)
+      {
+        if( CollisionDetection::HasCollision(enemy->GetCircle(), m_Player->GetCircle()) )
+        {
+          m_Player->SetState(Actor::E_Dead);
+        }
+      }
     }
   }
 
-  // collisions with players / walls 
+
+  // collisions with players / walls
 }
 
 void Game::AddActor(Actor* actor)
@@ -220,9 +228,13 @@ void Game::LoadData()
   m_Player = new Player(this); // scale set inside class
   m_Player->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
 
-  // create enemy (TODO : spawn multiple enemies)
-  m_Enemy = new Enemy(this); // scale set inside class
-  m_Enemy->SetPosition(Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT/4));
+  // create initial enemies
+  for(int i = 1; i < 3; ++i)
+  {
+    Enemy* enemy = new Enemy(this); // scale set inside class
+    enemy->SetPosition(Vector2(SCREEN_WIDTH/i - (SCREEN_WIDTH/2), SCREEN_HEIGHT/i));
+    m_Enemies.push_back(enemy);
+  }
 
   // create background tile map
   Actor* tileMapActor = new Actor(this);
@@ -381,6 +393,11 @@ void Game::DrawGameScene()
   };
   SDL_RenderFillRect(m_Renderer, &hunterRect);
   */
+}
+
+std::vector<Enemy*> Game::GetEnemies()
+{
+  return m_Enemies;
 }
 
 void Game::ShutDown()

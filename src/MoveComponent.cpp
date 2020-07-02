@@ -3,7 +3,7 @@
 MoveComponent::MoveComponent(class Actor* owner, int updateOrder)
   :Component(owner, updateOrder)
   , m_AngularSpeed(0)
-  , m_ForwardSpeed(FOX_SPEED)
+  , m_ForwardSpeed(FOX_SPEED) // todo make variable for bullet speed
   , m_Velocity(Vector2(0.0f, 0.0f))
   , m_ForwardVector(Vector2(0.0f, 0.0f))
   , m_ClampToScreen(false)
@@ -19,6 +19,9 @@ void MoveComponent::Update(float deltaTime)
     if (m_ClampToScreen)
     {
       m_Owner->ClampToScreen(pos.y, m_Owner->GetHeight(), SCREEN_HEIGHT);
+    } else {
+      // destroy
+      m_Owner->SetState(Actor::E_Dead);
     }
   }
   if (m_Velocity.x != 0)
@@ -27,8 +30,14 @@ void MoveComponent::Update(float deltaTime)
     if (m_ClampToScreen)
     {
       m_Owner->ClampToScreen(pos.x, m_Owner->GetWidth(), SCREEN_WIDTH);
+    } else {
+      // destroy
+      m_Owner->SetState(Actor::E_Dead);
     }
   }
+
+  // TODO : can put limits in here based on walls as well
+
   m_Owner->SetVelocity(m_Velocity); // animation comp uses this variable
   m_Owner->SetPosition(pos);
 
