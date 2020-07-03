@@ -1,5 +1,7 @@
 #include "Map.h"
 #include "Constants.h"
+#include "CollisionDetection.h"
+#include "RectangleComponent.h"
 
 #include <iostream>
 #include <fstream>
@@ -50,24 +52,32 @@ bool Map::LoadCsv(std::string fileName)
   return true;
 }
 
-bool Map::CollidesWithBarrier(Vector2 position)
+bool Map::CollidesWithBarrier(Vector2 pos, float width, float height)
 {
-  // todo check
-  int i = std::ceil((position.y * m_Rows) / SCREEN_HEIGHT);
-  int j = std::ceil((position.x * m_Cols) / SCREEN_WIDTH);
+  // TODO need to get ALL CELLS that the rectangle overlaps ... and check each
+
+  int i = std::ceil((pos.y * m_Rows) / SCREEN_HEIGHT);
+  int j = std::ceil((pos.x * m_Cols) / SCREEN_WIDTH);
 
   int index = m_Cols * i + j;
   if (index < csv.size())
   {
-    int cell = csv.at(index);
+    int centerCell = csv.at(index);
 
-    std::cout<<"\n x:"<<position.x<<" y:"<<position.y<<" i:"<<i<<" j:"<<j<<" cell: "<<cell;
+    // TODO :
+    // 1. get center CELL and add to set
 
-    if (cell == -1 || cell == 0)
+    // 2. if has collision, get all CELLS around current cell and add to set
+
+    // 3. once set complete, check for barriers - if any barriers, return true
+
+
+    if (centerCell == -1 || centerCell == 0)
     {
       // no collision, occupied cell is empty
       return false;
     }
+
   }
 
   return true;

@@ -36,7 +36,7 @@ void MoveComponent::Update(float deltaTime)
   }
 
   // prevent passing through barriers
-  if (!m_Owner->CollidesWithBarrier(pos))
+  if (!m_Owner->CollidesWithBarrier(m_Owner->GetPosition(), m_Owner->GetWidth(), m_Owner->GetHeight()) )
   {
     m_Owner->SetVelocity(m_Velocity); // animation comp uses this variable
     m_Owner->SetPosition(pos);

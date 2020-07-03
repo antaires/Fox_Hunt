@@ -16,7 +16,7 @@ private:
   bool LoadCsv(std::string fileName);
 public:
   Map(std::string fileName);
-  bool CollidesWithBarrier(Vector2 position);
+  bool CollidesWithBarrier(Vector2 pos, float width, float height);
 
   std::vector<int> GetCsv() const;
 };

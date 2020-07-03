@@ -404,9 +404,9 @@ std::vector<Enemy*> Game::GetEnemies()
   return m_Enemies;
 }
 
-bool Game::CollidesWithBarrier(Vector2 position)
+bool Game::CollidesWithBarrier(Vector2 pos, float width, float height)
 {
-  return m_Map->CollidesWithBarrier(position);
+  return m_Map->CollidesWithBarrier(pos, width, height);
 }
 
 void Game::ShutDown()

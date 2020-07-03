@@ -2,6 +2,7 @@
 #include "SDL2/SDL.h"
 #include "AnimSpriteComponent.h"
 #include "CircleComponent.h"
+#include "RectangleComponent.h"
 #include "Player.h"
 #include "Game.h"
 
@@ -10,6 +11,7 @@
 Enemy::Enemy(class Game* game)
   : Actor(game)
   , m_Circle(nullptr)
+  , m_Rectangle(nullptr)
 {
   // TODO set up AI component (which extends Move Component)
 
@@ -39,6 +41,11 @@ Enemy::Enemy(class Game* game)
   // set up circle component for collisions
   m_Circle = new CircleComponent(this);
   m_Circle->SetRadius( m_AnimSpriteComponent->GetTextureWidth() / 2 * GetScale());
+
+  // set up rectangle component for collisions
+  m_Rectangle = new RectangleComponent(this);
+  m_Rectangle->SetWidth(GetWidth());
+  m_Rectangle->SetHeight(GetHeight());
 }
 
 void Enemy::UpdateActor(float deltaTime)
@@ -103,5 +110,7 @@ class CircleComponent* Enemy::GetCircle() const
 {
   return m_Circle;
 }
+
+class RectangleComponent* Enemy::GetRectangle() const { return m_Rectangle; }
 
 // void Enemy::ProcessKeyboard(const uint8_t* state){}

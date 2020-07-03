@@ -17,6 +17,8 @@ private:
   float m_Scale; // 1.0f is 100%
   float m_Rotation; // rotation angle in RADIANS
 
+  Vector2 m_TopCornerPosition; // used for rectangle collision check
+
   Vector2 m_Velocity;
   Vector2 m_ForwardVector;
 
@@ -55,11 +57,12 @@ public:
   float GetWidth() const;
   void SetHeight(float height);
   void SetWidth(float width);
+  const Vector2& GetTopCornerPosition() const;
   class Game* GetGame();
 
   void AddComponent(class Component* component);
   void RemoveComponent(class Component* component);
 
   void ClampToScreen(float& pos, int objHeight, int limit);
-  bool CollidesWithBarrier(Vector2 position);
+  bool CollidesWithBarrier(Vector2 position, float width, float height) const;
 };

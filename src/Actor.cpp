@@ -6,6 +6,7 @@ Actor::Actor(class Game* game)
   , m_Position(Vector2(0.0f, 0.0f))
   , m_Scale(1.0f)
   , m_Rotation(0.0f)
+  , m_TopCornerPosition(Vector2(0.0f, 0.0f))
   , m_Velocity(Vector2(0.0f, 0.0f))
   , m_ForwardVector(Vector2(0.0f, 0.0f))
   , m_Width(0)
@@ -40,6 +41,10 @@ void Actor::UpdateComponents(float deltaTime)
     {
       comp->Update(deltaTime);
     }
+
+    // update top corner position
+    m_TopCornerPosition.x = m_Position.x - (m_Width/2);
+    m_TopCornerPosition.y = m_Position.y - (m_Height/2);
 }
 
 void Actor::UpdateActor(float deltaTime){}
@@ -111,6 +116,8 @@ void Actor::SetHeight(float height) { m_Height = height;}
 
 void Actor::SetWidth(float width) { m_Width = width; }
 
+const Vector2& Actor::GetTopCornerPosition() const { return m_TopCornerPosition; }
+
 class Game* Actor::GetGame(){return m_Game;}
 
 void Actor::AddComponent(class Component* component)
@@ -145,7 +152,7 @@ void Actor::ClampToScreen(float& pos, int objHeight, int limit)
   if (pos > limit - (objHeight / 2)){pos = limit - (objHeight/2);}
 }
 
-bool Actor::CollidesWithBarrier(Vector2 position)
+bool Actor::CollidesWithBarrier(Vector2 position, float width, float height) const
 {
-  return m_Game->CollidesWithBarrier(position);
+  return m_Game->CollidesWithBarrier(position, width, height);
 }

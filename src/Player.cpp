@@ -3,6 +3,7 @@
 #include "AnimSpriteComponent.h"
 #include "InputComponent.h"
 #include "CircleComponent.h"
+#include "RectangleComponent.h"
 #include "Bullet.h"
 #include "Game.h"
 
@@ -11,6 +12,7 @@
 Player::Player(class Game* game)
   : Actor(game)
   , m_Circle(nullptr)
+  , m_Rectangle(nullptr)
 {
   SetScale(0.1f);
 
@@ -51,6 +53,12 @@ Player::Player(class Game* game)
   // set up circle component for collisions
   m_Circle = new CircleComponent(this);
   m_Circle->SetRadius( m_AnimSpriteComponent->GetTextureWidth() / 2 * GetScale());
+
+  // set up rectangle component for collisions
+  m_Rectangle = new RectangleComponent(this);
+  m_Rectangle->SetWidth(GetWidth());
+  m_Rectangle->SetHeight(GetHeight());
+
 }
 
 void Player::UpdateActor(float deltaTime)
@@ -118,7 +126,6 @@ void Player::UpdateActor(float deltaTime)
 void Player::ProcessKeyboard(const uint8_t* state)
 {}
 
-class CircleComponent* Player::GetCircle() const
-{
-  return m_Circle;
-}
+class CircleComponent* Player::GetCircle() const { return m_Circle; }
+
+class RectangleComponent* Player::GetRectangle() const { return m_Rectangle; }
