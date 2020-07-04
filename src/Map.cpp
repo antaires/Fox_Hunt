@@ -2,11 +2,13 @@
 #include "Constants.h"
 #include "CollisionDetection.h"
 #include "RectangleComponent.h"
+#include "Math.h"
 
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <cmath>
+#include <unordered_map>
 
 Map::Map(std::string fileName)
   : m_Rows(0)
@@ -54,33 +56,68 @@ bool Map::LoadCsv(std::string fileName)
 
 bool Map::CollidesWithBarrier(Vector2 pos, float width, float height)
 {
-  // TODO need to get ALL CELLS that the rectangle overlaps ... and check each
+  // checks all cells that are colliding with actor for barriers
 
+  // convert screen position to 1d array index
   int i = std::ceil((pos.y * m_Rows) / SCREEN_HEIGHT);
   int j = std::ceil((pos.x * m_Cols) / SCREEN_WIDTH);
+  int centerIndex = m_Cols * i + j;
 
-  int index = m_Cols * i + j;
-  if (index < csv.size())
+  int cellWidth = SCREEN_WIDTH / m_Cols;
+  int cellHeight = SCREEN_HEIGHT / m_Rows;
+
+  // 1. get center CELL and add to set
+  std::vector<int> toCheck;
+  std::unordered_map<int, int> visited;
+  visited[centerIndex] = centerIndex;
+  toCheck.push_back(centerIndex);
+
+  // 2. if has collision, get all CELLS around current cell and add to set
+  while(!toCheck.empty())
   {
-    int centerCell = csv.at(index);
+    int index = toCheck.back();
+    toCheck.pop_back();
+    visited[index] = index;
 
-    // TODO :
-    // 1. get center CELL and add to set
-
-    // 2. if has collision, get all CELLS around current cell and add to set
-
-    // 3. once set complete, check for barriers - if any barriers, return true
-
-
-    if (centerCell == -1 || centerCell == 0)
+    // check for collision with barrier
+    if (index < csv.size())
     {
-      // no collision, occupied cell is empty
-      return false;
+      int cell = csv.at(index);
+      if (cell >= 1)
+      {
+        return true; // collision !
+      }
     }
 
+    // add neighboring cells that aren't in visited if they collide with actor
+    std::vector<int> surroundingCells;
+    surroundingCells.push_back(index - 1);
+    surroundingCells.push_back(index + 1);
+    surroundingCells.push_back(index - m_Cols - 1);
+    surroundingCells.push_back(index - m_Cols);
+    surroundingCells.push_back(index - m_Cols + 1);
+    surroundingCells.push_back(index + m_Cols - 1);
+    surroundingCells.push_back(index + m_Cols);
+    surroundingCells.push_back(index + m_Cols + 1);
+
+    for(int neighborCell : surroundingCells)
+    {
+      auto it = visited.find(neighborCell);
+      if ( neighborCell < csv.size() && it == visited.end())
+      {
+        // if collides with actor, add to toCheck
+        int x = std::floor(neighborCell / m_Cols);
+        int y = neighborCell % m_Cols;
+        Vector2 neighborPos( x * cellWidth, y * cellHeight );
+        if (CollisionDetection::HasCollision(pos, width, height, neighborPos, cellWidth, cellHeight))
+        {
+          toCheck.push_back(neighborCell);
+        }
+      }
+    }
   }
 
-  return true;
+  return false;
 }
 
 std::vector<int> Map::GetCsv() const

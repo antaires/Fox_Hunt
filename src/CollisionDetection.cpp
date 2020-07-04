@@ -1,7 +1,6 @@
 #include "CollisionDetection.h"
 #include "CircleComponent.h"
 #include "RectangleComponent.h"
-#include "Math.h"
 
 bool CollisionDetection::HasCollision(class CircleComponent* a, class CircleComponent* b)
 {
@@ -30,6 +29,20 @@ bool CollisionDetection::HasCollision(class RectangleComponent* a, class Rectang
       aPos.x + a->GetWidth() > bPos.x &&
       aPos.y < bPos.y + b->GetHeight() &&
       aPos.y + a->GetHeight() > bPos.y)
+    {
+      return true;
+    }
+
+  return false;
+}
+
+bool CollisionDetection::HasCollision(Vector2 aPos, float aWidth, float aHeight, Vector2 bPos, float bWidth, float bHeight)
+{
+  // accepts position as top left corner
+  if (aPos.x < bPos.x + bWidth &&
+      aPos.x + aWidth > bPos.x &&
+      aPos.y < bPos.y + bHeight &&
+      aPos.y + aHeight > bPos.y)
     {
       return true;
     }

@@ -228,7 +228,7 @@ void Game::LoadData()
 
   // create player
   m_Player = new Player(this); // scale set inside class
-  m_Player->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
+  m_Player->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/3));
 
   // create initial enemies
   for(int i = 1; i < 3; ++i)
