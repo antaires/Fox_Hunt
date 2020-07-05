@@ -20,7 +20,13 @@ Enemy::Enemy(class Game* game)
   // set up animation component
   m_AnimSpriteComponent = new AnimSpriteComponent(this);
   std::vector<SDL_Texture*> anims = {
-      game->GetTexture("assets/hunter01.png") // right fox : 0 - 3
+      game->GetTexture("assets/hunter01.png")
+      , game->GetTexture("assets/hunter02.png")
+      , game->GetTexture("assets/hunter03.png")
+      , game->GetTexture("assets/hunter04.png")
+      , game->GetTexture("assets/hunter05.png")
+      , game->GetTexture("assets/hunter06.png")
+      , game->GetTexture("assets/hunter07.png")
   };
   m_AnimSpriteComponent->SetAnimTextures(anims);
 
@@ -33,6 +39,7 @@ Enemy::Enemy(class Game* game)
   m_AnimSpriteComponent->SetAnimationClip("stillLeft", 0, 0, false);
   m_AnimSpriteComponent->SetAnimationClip("stillUp", 0, 0, false);
   m_AnimSpriteComponent->SetAnimationClip("stillDown", 0, 0, false);
+  m_AnimSpriteComponent->SetAnimationClip("masked", 1, 6, false);
 
   // set actor heigth / width from texture and scale
   SetHeight(m_AnimSpriteComponent->GetTextureHeight() * GetScale());
@@ -54,6 +61,7 @@ void Enemy::UpdateActor(float deltaTime)
 
   // TODO place all of this on AnimSpriteComponent, based on isMoving, isFiring, velocity, forwardVector
   // since NPCs will need this same logic
+
   bool isMoving = true;
   Vector2 velocity = GetVelocity();
   if (velocity.x == 0 && velocity.y == 0)
@@ -114,3 +122,19 @@ class CircleComponent* Enemy::GetCircle() const
 class RectangleComponent* Enemy::GetRectangle() const { return m_Rectangle; }
 
 // void Enemy::ProcessKeyboard(const uint8_t* state){}
+
+void Enemy::HandleDeath()
+{
+  if (!m_DyingStarted)
+  {
+    // if first time here, start dying animation
+    m_AnimSpriteComponent->SetCurrentAnimationClip("masked");
+    m_DyingStarted;
+  }
+  
+  // else if anim done, set to m_Dead state
+  else if (m_AnimSpriteComponent->GetPreviousAnimationClip() == m_AnimSpriteComponent->GetCurrentAnimationClip())
+  {
+    SetState(Actor::E_Dead);
+  }
+}

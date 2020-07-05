@@ -11,4 +11,5 @@ public:
   Bullet(class Game* game, Vector2 forwardVector);
 
   void UpdateActor(float deltaTime) override;
+  void HandleDeath() override;
 };

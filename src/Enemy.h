@@ -13,5 +13,7 @@ public:
   void UpdateActor(float deltaTime) override;
   class CircleComponent* GetCircle() const;
   class RectangleComponent* GetRectangle() const;
+
+  void HandleDeath() override;
   // void ProcessKeyboard(const uint8_t* state);
 };

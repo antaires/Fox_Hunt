@@ -32,9 +32,14 @@ void Bullet::UpdateActor(float deltaTime)
   {
     if( CollisionDetection::HasCollision(enemy->GetCircle(), m_Circle) )
     {
-      enemy->SetState(Actor::E_Dead);
-      SetState(Actor::E_Dead);
+      enemy->SetState(Actor::E_Dying);
+      SetState(Actor::E_Dying);
       break;
     }
   }
+}
+
+void Bullet::HandleDeath()
+{
+  // TODO play exploding animation
 }

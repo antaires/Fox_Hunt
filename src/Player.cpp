@@ -129,3 +129,8 @@ void Player::ProcessKeyboard(const uint8_t* state)
 class CircleComponent* Player::GetCircle() const { return m_Circle; }
 
 class RectangleComponent* Player::GetRectangle() const { return m_Rectangle; }
+
+void Player::HandleDeath()
+{
+  // TODO - play death animation
+}

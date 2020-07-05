@@ -188,8 +188,6 @@ void Game::HandleCollisions()
     }
   }
 
-
-  // collisions with players / walls
 }
 
 void Game::AddActor(Actor* actor)
@@ -362,41 +360,6 @@ void Game::GenerateOutput()
   }
 
   SDL_RenderPresent(m_Renderer);
-}
-
-void Game::DrawGameScene()
-{
-  /*  TODO
-  // draw wall
-  SDL_SetRenderDrawColor(m_Renderer, 59, 128, 59, 255); // bright orange
-  SDL_Rect wallRect {
-      static_cast<int> (m_WallPos.x - 150 / 2)
-    , static_cast<int> (m_WallPos.y - 300 / 2)
-    , 150
-    , 300
-  };
-  SDL_RenderFillRect(m_Renderer, &wallRect);
-
-  // draw fox
-  SDL_SetRenderDrawColor(m_Renderer, 255, 136, 0, 255); // bright orange
-  SDL_Rect foxRect {
-      static_cast<int> (m_Fox.pos.x - FOX_WIDTH / 2)
-    , static_cast<int> (m_Fox.pos.y - FOX_HEIGHT / 2)
-    , FOX_WIDTH
-    , FOX_HEIGHT
-  };
-  SDL_RenderFillRect(m_Renderer, &foxRect);
-
-  // draw hunter
-  SDL_SetRenderDrawColor(m_Renderer, 255, 21, 0, 255); // bright red
-  SDL_Rect hunterRect {
-      static_cast<int> (m_Hunter.pos.x - HUNTER_WIDTH / 2)
-    , static_cast<int> (m_Hunter.pos.y - HUNTER_HEIGHT / 2)
-    , HUNTER_WIDTH
-    , HUNTER_HEIGHT
-  };
-  SDL_RenderFillRect(m_Renderer, &hunterRect);
-  */
 }
 
 std::vector<Enemy*> Game::GetEnemies()

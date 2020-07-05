@@ -75,6 +75,12 @@ std::string AnimSpriteComponent::GetPreviousAnimationClip() const
   return m_PreviousAnimationClip;
 }
 
+std::string AnimSpriteComponent::GetCurrentAnimationClip() const
+{
+  return m_CurrentAnimationClip;
+}
+
+
 float AnimSpriteComponent::GetAnimFPS() const { return m_AnimFPS; }
 
 void AnimSpriteComponent::SetAnimFPS(float fps) { m_AnimFPS = fps; }

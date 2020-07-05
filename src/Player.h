@@ -15,6 +15,8 @@ public:
   void ProcessKeyboard(const uint8_t* state);
   class CircleComponent* GetCircle() const;
   class RectangleComponent* GetRectangle() const;
+
+  void HandleDeath() override;
 };
 
 // TODO add global func to access player actor pointer

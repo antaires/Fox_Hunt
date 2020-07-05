@@ -12,6 +12,7 @@ Actor::Actor(class Game* game)
   , m_Width(0)
   , m_Height(0)
   , m_Game(game)
+  , m_DyingStarted(false)
 {
   m_Game->AddActor(this);
 }
@@ -33,6 +34,12 @@ void Actor::Update(float deltaTime)
     UpdateComponents(deltaTime);
     UpdateActor(deltaTime);
   }
+
+  if (m_State == E_Dying)
+  {
+    HandleDeath();
+    UpdateComponents(deltaTime);
+  }
 }
 
 void Actor::UpdateComponents(float deltaTime)
@@ -42,7 +49,7 @@ void Actor::UpdateComponents(float deltaTime)
       comp->Update(deltaTime);
     }
 
-    // update top corner position
+    // update top corner position TODO: still used?
     m_TopCornerPosition.x = m_Position.x - (m_Width/2);
     m_TopCornerPosition.y = m_Position.y - (m_Height/2);
 }
@@ -64,7 +71,7 @@ void Actor::ProcessInput(const uint8_t* keyState)
 
 void Actor::ProcessMouse(const uint32_t mouseState, const int x, const int y)
 {
-  // calle din game not overridable
+  // called in game not overridable
   if (m_State == E_Active)
   {
     for(auto comp: m_Components)
@@ -156,3 +163,5 @@ bool Actor::CollidesWithBarrier(Vector2 position, float width, float height) con
 {
   return m_Game->CollidesWithBarrier(position, width, height);
 }
+
+void Actor::HandleDeath(){}

@@ -29,6 +29,7 @@ public:
 
   void SetCurrentAnimationClip(std::string name);
   std::string GetPreviousAnimationClip() const;
+  std::string GetCurrentAnimationClip() const;
   float GetAnimFPS() const;
   void SetAnimFPS(float fps);
 };

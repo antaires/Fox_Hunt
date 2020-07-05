@@ -35,8 +35,6 @@ private:
   void HandleCollisions();
   void GenerateOutput();
 
-  void DrawGameScene();
-
   void LoadData();
   void UnloadData();
 

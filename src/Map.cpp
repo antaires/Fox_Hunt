@@ -57,8 +57,6 @@ bool Map::LoadCsv(std::string fileName)
 bool Map::CollidesWithBarrier(Vector2 pos, float width, float height)
 {
   // checks all cells that are colliding with actor for barriers
-
-
   int cellWidth = SCREEN_WIDTH / m_Cols;
   int cellHeight = SCREEN_HEIGHT / m_Rows;
 
@@ -109,7 +107,6 @@ bool Map::CollidesWithBarrier(Vector2 pos, float width, float height)
         // if collides with actor, add to toCheck
         int y = std::floor(neighborCell / m_Cols);
         int x = neighborCell % m_Cols;
-        std::cout<<"\n x:"<<x <<" y: " << y;
         Vector2 neighborPos( x * cellWidth, y * cellHeight );
         if (CollisionDetection::HasCollision(Vector2(pos.x - width/2, pos.y - height/2), width, height, neighborPos, cellWidth, cellHeight))
         {

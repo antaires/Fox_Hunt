@@ -8,7 +8,7 @@ class Game;
 
 class Actor {
 public:
-  enum State {E_Active, E_Paused, E_Dead};
+  enum State {E_Active, E_Paused, E_Dead, E_Dying};
 private:
   State m_State;
 
@@ -28,6 +28,9 @@ private:
   class Game* m_Game;
 
   std::vector<class Component*> m_Components; // sorted by update order
+
+protected:
+    bool m_DyingStarted;
 public:
   Actor(class Game* game);
   virtual ~Actor();
@@ -38,6 +41,8 @@ public:
   void ProcessInput(const uint8_t* keyState); // called in Game not overridable
   void ProcessMouse(const uint32_t mouseState, const int x, const int y); // called in Game not overridable
   virtual void ActorInput(const uint8_t* keyState);
+
+  virtual void HandleDeath();
 
   Vector2 GetForward() const;
 
