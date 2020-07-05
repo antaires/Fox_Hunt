@@ -58,13 +58,14 @@ bool Map::CollidesWithBarrier(Vector2 pos, float width, float height)
 {
   // checks all cells that are colliding with actor for barriers
 
-  // convert screen position to 1d array index
-  int i = std::ceil((pos.y * m_Rows) / SCREEN_HEIGHT);
-  int j = std::ceil((pos.x * m_Cols) / SCREEN_WIDTH);
-  int centerIndex = m_Cols * i + j;
 
   int cellWidth = SCREEN_WIDTH / m_Cols;
   int cellHeight = SCREEN_HEIGHT / m_Rows;
+
+  // convert screen position to 1d array index
+  int i =(int) pos.y / cellHeight;
+  int j = (int) pos.x / cellWidth;
+  int centerIndex = m_Cols * i + j;
 
   // 1. get center CELL and add to set
   std::vector<int> toCheck;
@@ -106,10 +107,11 @@ bool Map::CollidesWithBarrier(Vector2 pos, float width, float height)
       if ( neighborCell < csv.size() && it == visited.end())
       {
         // if collides with actor, add to toCheck
-        int x = std::floor(neighborCell / m_Cols);
-        int y = neighborCell % m_Cols;
+        int y = std::floor(neighborCell / m_Cols);
+        int x = neighborCell % m_Cols;
+        std::cout<<"\n x:"<<x <<" y: " << y;
         Vector2 neighborPos( x * cellWidth, y * cellHeight );
-        if (CollisionDetection::HasCollision(pos, width, height, neighborPos, cellWidth, cellHeight))
+        if (CollisionDetection::HasCollision(Vector2(pos.x - width/2, pos.y - height/2), width, height, neighborPos, cellWidth, cellHeight))
         {
           toCheck.push_back(neighborCell);
         }
