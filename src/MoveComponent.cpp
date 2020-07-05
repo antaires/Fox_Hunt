@@ -43,6 +43,8 @@ void MoveComponent::Update(float deltaTime)
 
     // set actor forwardVector
     m_Owner->SetForwardVector(m_ForwardVector);
+  } else {
+    m_Owner->SetHasCollision(true);
   }
 }
 

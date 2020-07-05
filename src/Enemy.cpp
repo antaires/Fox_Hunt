@@ -129,9 +129,8 @@ void Enemy::HandleDeath()
   {
     // if first time here, start dying animation
     m_AnimSpriteComponent->SetCurrentAnimationClip("masked");
-    m_DyingStarted;
   }
-  
+
   // else if anim done, set to m_Dead state
   else if (m_AnimSpriteComponent->GetPreviousAnimationClip() == m_AnimSpriteComponent->GetCurrentAnimationClip())
   {

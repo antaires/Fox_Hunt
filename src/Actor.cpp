@@ -13,6 +13,7 @@ Actor::Actor(class Game* game)
   , m_Height(0)
   , m_Game(game)
   , m_DyingStarted(false)
+  , m_HasCollision(false)
 {
   m_Game->AddActor(this);
 }
@@ -122,6 +123,8 @@ float Actor::GetWidth() const { return m_Width; }
 void Actor::SetHeight(float height) { m_Height = height;}
 
 void Actor::SetWidth(float width) { m_Width = width; }
+
+void Actor::SetHasCollision(bool hasCollision) { m_HasCollision = hasCollision; }
 
 const Vector2& Actor::GetTopCornerPosition() const { return m_TopCornerPosition; }
 

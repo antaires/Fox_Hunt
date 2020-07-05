@@ -5,7 +5,7 @@
 class Bullet: public Actor
 {
 private:
-  class SpriteComponent* m_SpriteComponent;
+  class AnimSpriteComponent* m_AnimSpriteComponent;
   class CircleComponent* m_Circle;
 public:
   Bullet(class Game* game, Vector2 forwardVector);

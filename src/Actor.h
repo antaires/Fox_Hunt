@@ -31,6 +31,7 @@ private:
 
 protected:
     bool m_DyingStarted;
+    bool m_HasCollision;
 public:
   Actor(class Game* game);
   virtual ~Actor();
@@ -62,6 +63,7 @@ public:
   float GetWidth() const;
   void SetHeight(float height);
   void SetWidth(float width);
+  void SetHasCollision(bool hasCollision);
   const Vector2& GetTopCornerPosition() const;
   class Game* GetGame();
 
