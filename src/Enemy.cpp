@@ -3,6 +3,8 @@
 #include "AnimSpriteComponent.h"
 #include "CircleComponent.h"
 #include "RectangleComponent.h"
+#include "AIComponent.h"
+#include "AIPatrol.h"
 #include "Player.h"
 #include "Game.h"
 
@@ -53,6 +55,14 @@ Enemy::Enemy(class Game* game)
   m_Rectangle = new RectangleComponent(this);
   m_Rectangle->SetWidth(GetWidth());
   m_Rectangle->SetHeight(GetHeight());
+
+  // add AI component for state machine AI behaviour
+  AIComponent* aic = new AIComponent(this);
+  // register states with ai component
+  aic->RegisterState(new AIPatrol(aic));
+  // aic->RegisterState(new AIHunt(aic));
+  // aic->RegisterState(new AIAttack(aic));
+  // aic->RegisterState(new AIFlee(aic));
 }
 
 void Enemy::UpdateActor(float deltaTime)
