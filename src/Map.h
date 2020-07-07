@@ -2,6 +2,7 @@
 
 #include "Math.h"
 
+#include <unordered_map>
 #include <vector>
 #include <string>
 
@@ -17,6 +18,8 @@ struct Graph
 {
   std::vector<GraphNode*> m_Nodes;
 };
+
+using NodeToParentMap = std::unordered_map<const GraphNode*, const GraphNode*>;
 
 // used to prevent actors from passing through barriers
 class Map
@@ -34,10 +37,16 @@ private:
   void BuildGraph();
   Vector2 GetPositionFromCsvIndex(int index);
   Vector2 GetPositionFromCsvIndexCentered(int index);
+  int ConvertPositionto1Dindex(Vector2 pos);
+
+  bool BFS(const Graph& graph, const GraphNode* start, const GraphNode* goal, NodeToParentMap& outMap);
+  bool GBFS();
+  bool AStar();
+
 public:
   Map(std::string fileName);
   bool CollidesWithBarrier(Vector2 pos, float width, float height);
   std::vector<int> GetCsv() const;
 
-  // std::vector<Vector2> AStar(Vector2 from, Vector2 to);
+  std::vector<Vector2> GetPath(Vector2 from, Vector2 to);
 };

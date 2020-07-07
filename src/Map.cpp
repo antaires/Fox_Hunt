@@ -8,7 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <cmath>
-#include <unordered_map>
+#include <queue>
 
 Map::Map(std::string fileName)
   : m_Rows(0)
@@ -73,7 +73,7 @@ void Map::BuildGraph()
     if (m_Csv.at(i) < 1)
     {
       GraphNode* gn = new GraphNode();
-      gn->m_Index = i;
+      gn->m_Index = i; // TODO need to store this?
       gn->m_Position = GetPositionFromCsvIndexCentered(i);
       csvToNode[i] = gn;
     }
@@ -111,9 +111,7 @@ bool Map::CollidesWithBarrier(Vector2 pos, float width, float height)
   // checks all cells that are colliding with actor for barriers
 
   // convert screen position to 1d array index
-  int i =(int) pos.y / m_CellHeight;
-  int j = (int) pos.x / m_CellWidth;
-  int centerIndex = m_Cols * i + j;
+  int centerIndex = ConvertPositionto1Dindex(pos);
 
   // 1. get center CELL and add to set
   std::vector<int> toCheck;
@@ -179,6 +177,12 @@ Vector2 Map::GetPositionFromCsvIndex(int index)
   return Vector2( x * m_CellWidth, y * m_CellHeight );
 }
 
+int Map::ConvertPositionto1Dindex(Vector2 pos)
+{
+  int i = (int) pos.y / m_CellHeight;
+  int j = (int) pos.x / m_CellWidth;
+  return m_Cols * i + j;
+}
 
 Vector2 Map::GetPositionFromCsvIndexCentered(int index)
 {
@@ -191,4 +195,75 @@ std::vector<int> Map::GetCsv() const
 {
   // to be used by AI and pathfinding to build graph
   return m_Csv;
+}
+
+std::vector<Vector2> Map::GetPath(Vector2 from, Vector2 to)
+{
+  std::vector<Vector2> path;
+
+  // calculate index from position
+  int indexFrom = ConvertPositionto1Dindex(from);
+  int indexTo   = ConvertPositionto1Dindex(to);
+
+  // BFS
+  // search from to to from, to avoid reversing path
+  NodeToParentMap parentMap;
+  bool found = BFS(m_Graph, m_Graph.m_Nodes[indexTo], m_Graph.m_Nodes[indexFrom], parentMap);
+  if(found)
+  {
+    // TODO reconstruct path by using parent pointers in outMap
+  }
+
+  // GBFS
+
+  // A*
+  return path;
+}
+
+bool Map::BFS(const Graph& graph, const GraphNode* start, const GraphNode* goal, NodeToParentMap& outMap)
+{
+  // whether we found a path
+  bool pathFound = false;
+
+  // nodes to consider
+  std::queue<const GraphNode*> queue;
+  queue.emplace(start);
+
+  while(!queue.empty())
+  {
+    // dequeue a node
+    const GraphNode* current = queue.front();
+    queue.pop();
+    if (current == goal)
+    {
+      pathFound = true;
+      break;
+    }
+
+    // enqueue adjacent nodes that aren't already in queue
+    for(const GraphNode* node: current->m_Adjacent)
+    {
+      // if parent is null, it hasn't been enqueued  (excluding start node)
+      const GraphNode* parent = outMap[node];
+      if (parent == nullptr && node != start)
+      {
+        // enqueue this node and set its parent
+        outMap[node] = current;
+        queue.emplace(node);
+      }
+    }
+  }
+
+  return pathFound;
+}
+
+bool Map::GBFS()
+{
+  // todo
+  return false;
+}
+
+bool Map::AStar()
+{
+  return false;
 }
