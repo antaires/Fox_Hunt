@@ -56,6 +56,7 @@ Enemy::Enemy(class Game* game)
   m_Rectangle->SetWidth(GetWidth());
   m_Rectangle->SetHeight(GetHeight());
 
+
   // add AI component for state machine AI behaviour
   AIComponent* aic = new AIComponent(this);
   // register states with ai component
@@ -63,6 +64,8 @@ Enemy::Enemy(class Game* game)
   // aic->RegisterState(new AIHunt(aic));
   // aic->RegisterState(new AIAttack(aic));
   // aic->RegisterState(new AIFlee(aic));
+  // set initial state
+  aic->ChangeState("Patrol");
 }
 
 void Enemy::UpdateActor(float deltaTime)

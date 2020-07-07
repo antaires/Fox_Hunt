@@ -13,8 +13,11 @@
 Map::Map(std::string fileName)
   : m_Rows(0)
   , m_Cols(0)
+  , m_CellWidth(0)
+  , m_CellHeight(0)
 {
   LoadCsv(fileName);
+  BuildGraph();
 }
 
 bool Map::LoadCsv(std::string fileName)
@@ -23,7 +26,7 @@ bool Map::LoadCsv(std::string fileName)
 
   if (!fin)
   {
-    std::cout<<"\nWorld map failed to load csv file: " << fileName;
+    std::cout<<"\nWorld map failed to load m_Csv file: " << fileName;
     return false;
   }
 
@@ -44,25 +47,72 @@ bool Map::LoadCsv(std::string fileName)
         ++m_Cols;
       }
       // add word to vector as number
-      csv.push_back(stoi(word));
+      m_Csv.push_back(stoi(word));
     }
     if (!haveCountedCols) {haveCountedCols = true;}
   }
 
   fin.close();
 
+  m_CellWidth = SCREEN_WIDTH / m_Cols;
+  m_CellHeight = SCREEN_HEIGHT / m_Rows;
+
   return true;
+}
+
+void Map::BuildGraph()
+{
+  // make an unordered_map <m_Csv int, graphnode*> to first build all graph nodes
+  // and cal position (using only non-barrier nodes)
+  // then, use this map to quickly set all adjacent nodes for each node by checking
+  // for top, left, bottom, right nodes in unordered_map. if not there, its a barrer.
+  std::unordered_map<int, GraphNode*> csvToNode; // TODO store this?
+  for(int i = 0; i < m_Csv.size(); ++i)
+  {
+    // only add if not barrier
+    if (m_Csv.at(i) < 1)
+    {
+      GraphNode* gn = new GraphNode();
+      gn->m_Index = i;
+      gn->m_Position = GetPositionFromCsvIndexCentered(i);
+      csvToNode[i] = gn;
+    }
+  }
+
+  // TODO loop over csvToNode and add adjacencies if present in map
+  for(auto iter = csvToNode.begin(); iter!=csvToNode.end(); ++iter)
+  {
+    int index = iter->first;
+    GraphNode* gn = iter->second;
+    // check 4 directions, if indices in unordered_map, then add to adjacencies
+    std::vector<int> directions;
+    directions.push_back(index - m_Cols);
+    directions.push_back(index + m_Cols);
+    directions.push_back(index - 1);
+    directions.push_back(index + 1);
+
+    for(auto dir : directions)
+    {
+      auto it = csvToNode.find(dir);
+      if (it != csvToNode.end())
+      {
+        // node is a walkway, add to adjacencies
+        gn->m_Adjacent.push_back(it->second);
+      }
+    }
+
+    // add node to graph
+    m_Graph.m_Nodes.push_back(gn);
+  }
 }
 
 bool Map::CollidesWithBarrier(Vector2 pos, float width, float height)
 {
   // checks all cells that are colliding with actor for barriers
-  int cellWidth = SCREEN_WIDTH / m_Cols;
-  int cellHeight = SCREEN_HEIGHT / m_Rows;
 
   // convert screen position to 1d array index
-  int i =(int) pos.y / cellHeight;
-  int j = (int) pos.x / cellWidth;
+  int i =(int) pos.y / m_CellHeight;
+  int j = (int) pos.x / m_CellWidth;
   int centerIndex = m_Cols * i + j;
 
   // 1. get center CELL and add to set
@@ -79,9 +129,9 @@ bool Map::CollidesWithBarrier(Vector2 pos, float width, float height)
     visited[index] = index;
 
     // check for collision with barrier
-    if (index < csv.size())
+    if (index < m_Csv.size())
     {
-      int cell = csv.at(index);
+      int cell = m_Csv.at(index);
       if (cell >= 1)
       {
         return true; // collision !
@@ -102,13 +152,16 @@ bool Map::CollidesWithBarrier(Vector2 pos, float width, float height)
     for(int neighborCell : surroundingCells)
     {
       auto it = visited.find(neighborCell);
-      if ( neighborCell < csv.size() && it == visited.end())
+      if ( neighborCell < m_Csv.size() && it == visited.end())
       {
         // if collides with actor, add to toCheck
+        /*
         int y = std::floor(neighborCell / m_Cols);
         int x = neighborCell % m_Cols;
-        Vector2 neighborPos( x * cellWidth, y * cellHeight );
-        if (CollisionDetection::HasCollision(Vector2(pos.x - width/2, pos.y - height/2), width, height, neighborPos, cellWidth, cellHeight))
+        Vector2 neighborPos( x * m_CellWidth, y * m_CellHeight );
+        */
+        Vector2 neighborPos = GetPositionFromCsvIndex(neighborCell);
+        if (CollisionDetection::HasCollision(Vector2(pos.x - width/2, pos.y - height/2), width, height, neighborPos, m_CellWidth, m_CellHeight))
         {
           toCheck.push_back(neighborCell);
         }
@@ -119,8 +172,23 @@ bool Map::CollidesWithBarrier(Vector2 pos, float width, float height)
   return false;
 }
 
+Vector2 Map::GetPositionFromCsvIndex(int index)
+{
+  int y = std::floor(index / m_Cols);
+  int x = index % m_Cols;
+  return Vector2( x * m_CellWidth, y * m_CellHeight );
+}
+
+
+Vector2 Map::GetPositionFromCsvIndexCentered(int index)
+{
+  int y = std::floor(index / m_Cols);
+  int x = index % m_Cols;
+  return Vector2( (x * m_CellWidth) + m_CellWidth/2, (y * m_CellHeight) + m_CellHeight/2 );
+}
+
 std::vector<int> Map::GetCsv() const
 {
   // to be used by AI and pathfinding to build graph
-  return csv;
+  return m_Csv;
 }

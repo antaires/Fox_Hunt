@@ -224,6 +224,9 @@ void Game::LoadData()
 {
   // load all textures
 
+  // create path map (barriers and walls) and AI
+  m_Map = new Map("assets/testMap01.csv");
+  
   // create player
   m_Player = new Player(this); // scale set inside class
   m_Player->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/3));
@@ -235,9 +238,6 @@ void Game::LoadData()
     enemy->SetPosition(Vector2(SCREEN_WIDTH/i - (SCREEN_WIDTH/2), SCREEN_HEIGHT/i));
     m_Enemies.push_back(enemy);
   }
-
-  // create path map (barriers and walls)
-  m_Map = new Map("assets/testMap01.csv");
 
   // create background tile map
   Actor* tileMapActor = new Actor(this);
