@@ -226,18 +226,15 @@ void Game::LoadData()
 
   // create path map (barriers and walls) and AI
   m_Map = new Map("assets/testMap01.csv");
-  
+
   // create player
   m_Player = new Player(this); // scale set inside class
   m_Player->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/3));
 
-  // create initial enemies
-  for(int i = 1; i < 3; ++i)
-  {
-    Enemy* enemy = new Enemy(this); // scale set inside class
-    enemy->SetPosition(Vector2(SCREEN_WIDTH/i - (SCREEN_WIDTH/2), SCREEN_HEIGHT/i));
-    m_Enemies.push_back(enemy);
-  }
+  // create initial enemies TODO: make several
+  Enemy* enemy = new Enemy(this, m_Map); // scale set inside class
+  enemy->SetPosition(Vector2(20, SCREEN_HEIGHT/2));
+  m_Enemies.push_back(enemy);
 
   // create background tile map
   Actor* tileMapActor = new Actor(this);

@@ -2,9 +2,10 @@
 #include "AIState.h"
 #include "SDL2/SDL.h" // just for SDL_Log
 
-AIComponent::AIComponent(class Actor* owner)
+AIComponent::AIComponent(class Actor* owner, class Map* map)
   :Component(owner)
   , m_CurrentState(nullptr)
+  , m_Map(map)
 {}
 
 void AIComponent::Update(float deltaTime)

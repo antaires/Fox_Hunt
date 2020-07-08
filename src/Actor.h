@@ -32,6 +32,7 @@ private:
 protected:
     bool m_DyingStarted;
     bool m_HasCollision;
+    Vector2 m_GoalPosition;
 public:
   Actor(class Game* game);
   virtual ~Actor();
@@ -64,6 +65,8 @@ public:
   void SetHeight(float height);
   void SetWidth(float width);
   void SetHasCollision(bool hasCollision);
+  Vector2 GetGoal() const;
+  void SetGoal(Vector2 goal);
   const Vector2& GetTopCornerPosition() const;
   class Game* GetGame();
 

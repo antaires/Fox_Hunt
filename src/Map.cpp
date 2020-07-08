@@ -100,7 +100,6 @@ void Map::BuildGraph()
         gn->m_Adjacent.push_back(it->second);
       }
     }
-
     // add node to graph
     m_Graph.m_Nodes.push_back(gn);
   }
@@ -153,11 +152,6 @@ bool Map::CollidesWithBarrier(Vector2 pos, float width, float height)
       if ( neighborCell < m_Csv.size() && it == visited.end())
       {
         // if collides with actor, add to toCheck
-        /*
-        int y = std::floor(neighborCell / m_Cols);
-        int x = neighborCell % m_Cols;
-        Vector2 neighborPos( x * m_CellWidth, y * m_CellHeight );
-        */
         Vector2 neighborPos = GetPositionFromCsvIndex(neighborCell);
         if (CollisionDetection::HasCollision(Vector2(pos.x - width/2, pos.y - height/2), width, height, neighborPos, m_CellWidth, m_CellHeight))
         {
@@ -177,18 +171,18 @@ Vector2 Map::GetPositionFromCsvIndex(int index)
   return Vector2( x * m_CellWidth, y * m_CellHeight );
 }
 
-int Map::ConvertPositionto1Dindex(Vector2 pos)
-{
-  int i = (int) pos.y / m_CellHeight;
-  int j = (int) pos.x / m_CellWidth;
-  return m_Cols * i + j;
-}
-
 Vector2 Map::GetPositionFromCsvIndexCentered(int index)
 {
   int y = std::floor(index / m_Cols);
   int x = index % m_Cols;
   return Vector2( (x * m_CellWidth) + m_CellWidth/2, (y * m_CellHeight) + m_CellHeight/2 );
+}
+
+int Map::ConvertPositionto1Dindex(Vector2 pos)
+{
+  int i = (int) pos.y / m_CellHeight;
+  int j = (int) pos.x / m_CellWidth;
+  return m_Cols * i + j;
 }
 
 std::vector<int> Map::GetCsv() const
@@ -211,7 +205,13 @@ std::vector<Vector2> Map::GetPath(Vector2 from, Vector2 to)
   bool found = BFS(m_Graph, m_Graph.m_Nodes[indexTo], m_Graph.m_Nodes[indexFrom], parentMap);
   if(found)
   {
-    // TODO reconstruct path by using parent pointers in outMap
+    // reconstruct path by using parent pointers in outMap because indexFrom parent points to proceeding node
+    auto it = parentMap.find(m_Graph.m_Nodes[indexFrom]);
+    while(it != parentMap.end())
+    {
+      path.push_back(it->second->m_Position);
+      it = parentMap.find(it->first); // TODO first or second correctly used here?
+    }
   }
 
   // GBFS
@@ -253,7 +253,6 @@ bool Map::BFS(const Graph& graph, const GraphNode* start, const GraphNode* goal,
       }
     }
   }
-
   return pathFound;
 }
 

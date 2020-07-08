@@ -8,6 +8,9 @@ AIPatrol::AIPatrol(class AIComponent* owner)
 // override with behaviours for this state
 void AIPatrol::Update(float deltaTime)
 {
+  // this just decides if i stay in patrol or change state, actual path planning
+  // happens in navigation component, which extends move component
+
   // TODO pick a random target location and walk there
   // TODO need to use path finding (as does hunt / attack )
 

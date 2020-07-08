@@ -5,19 +5,18 @@
 #include "RectangleComponent.h"
 #include "AIComponent.h"
 #include "AIPatrol.h"
+#include "NavigationComponent.h"
 #include "Player.h"
 #include "Game.h"
 
 // TODO: add AI component for movement
 
-Enemy::Enemy(class Game* game)
+Enemy::Enemy(class Game* game, class Map* map)
   : Actor(game)
   , m_Circle(nullptr)
   , m_Rectangle(nullptr)
 {
-  // TODO set up AI component (which extends Move Component)
-
-  SetScale(0.25f);
+  SetScale(0.15f);
 
   // set up animation component
   m_AnimSpriteComponent = new AnimSpriteComponent(this);
@@ -58,7 +57,7 @@ Enemy::Enemy(class Game* game)
 
 
   // add AI component for state machine AI behaviour
-  AIComponent* aic = new AIComponent(this);
+  AIComponent* aic = new AIComponent(this, map);
   // register states with ai component
   aic->RegisterState(new AIPatrol(aic));
   // aic->RegisterState(new AIHunt(aic));
@@ -66,6 +65,9 @@ Enemy::Enemy(class Game* game)
   // aic->RegisterState(new AIFlee(aic));
   // set initial state
   aic->ChangeState("Patrol");
+
+  // add navigation component
+  NavigationComponent* nav = new NavigationComponent(this);
 }
 
 void Enemy::UpdateActor(float deltaTime)

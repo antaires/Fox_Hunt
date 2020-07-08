@@ -120,7 +120,6 @@ void Player::UpdateActor(float deltaTime)
     }
   }
 
-  // TODO : if player state is Actor::E_Dead then set animation to death
 }
 
 void Player::ProcessKeyboard(const uint8_t* state)
