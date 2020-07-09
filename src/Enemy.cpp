@@ -9,6 +9,8 @@
 #include "Player.h"
 #include "Game.h"
 
+
+#include <iostream> // todo remove
 // TODO: add AI component for movement
 
 Enemy::Enemy(class Game* game, class Map* map)

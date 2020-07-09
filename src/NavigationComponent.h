@@ -3,6 +3,7 @@
 #include "MoveComponent.h"
 #include "Math.h"
 
+// simple class to move actor towards goal position 
 class NavigationComponent: public MoveComponent
 {
 private:

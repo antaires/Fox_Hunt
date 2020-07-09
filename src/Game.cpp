@@ -233,7 +233,7 @@ void Game::LoadData()
 
   // create initial enemies TODO: make several
   Enemy* enemy = new Enemy(this, m_Map); // scale set inside class
-  enemy->SetPosition(Vector2(20, SCREEN_HEIGHT/2));
+  enemy->SetPosition(Vector2(30, SCREEN_HEIGHT/2));
   m_Enemies.push_back(enemy);
 
   // create background tile map

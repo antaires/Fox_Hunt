@@ -1,5 +1,7 @@
 #include "NavigationComponent.h"
 
+#include <iostream> // todo remove
+
 NavigationComponent::NavigationComponent(class Actor* owner, int updateOrder)
   :MoveComponent(owner, updateOrder)
 {}
@@ -12,11 +14,12 @@ void NavigationComponent::Update(float deltaTime)
   // if at goal or close enough, do nothing
   // else, move towards goal
   // get vector from pos to goal, then normalize it and multiple by deltaTime
-  Vector2 diff = pos - goal;
-  if (Math::NearZero(diff.Length(), 2.0f))
+  Vector2 diff = goal - pos;
+  if (diff.Length() > 30)
   {
     diff.Normalize();
-    m_Owner->SetVelocity(diff);
+    SetVelocity(diff);
+    SetForwardVector(diff); // face in same direction as movement
   }
 
   MoveComponent::Update(deltaTime);

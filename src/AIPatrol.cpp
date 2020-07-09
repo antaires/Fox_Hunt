@@ -8,16 +8,12 @@ AIPatrol::AIPatrol(class AIComponent* owner)
 // override with behaviours for this state
 void AIPatrol::Update(float deltaTime)
 {
-  // this just decides if i stay in patrol or change state, actual path planning
-  // happens in navigation component, which extends move component
+  // decide if i stay in patrol or change state
 
-  // TODO pick a random target location and walk there
-  // TODO need to use path finding (as does hunt / attack )
+  // if position == goal, pick a new random target location and set goal
+  // using the m_Map
 
-  // if arrived within x distance of target location,
-  // (or haven't moved in x frames) then pick new target
-
-  // TODO if 'see' player using line-of-sight
+  // TODO if 'see' player using line-of-sight (collision ray, player)
   // if player within x distance, switch to hunt / attack
   //m_Owner->ChangeState("Hunt");
 }
