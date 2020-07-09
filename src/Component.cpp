@@ -23,3 +23,8 @@ void Component::ProcessMouse(const uint32_t mouseState, const int x, const int y
 {}
 
 int Component::GetUpdateOrder() const {return m_UpdateOrder;}
+
+class Actor* Component::GetOwner()
+{
+  return m_Owner;
+}

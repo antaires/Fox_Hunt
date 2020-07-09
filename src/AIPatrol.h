@@ -3,10 +3,12 @@
 #include "AIState.h"
 #include "Math.h"
 
+#include <vector>
+
 class AIPatrol: public AIState
 {
 private:
-  Vector2 m_Target;
+  std::vector<Vector2> m_Path;
 public:
   AIPatrol(class AIComponent* owner);
 

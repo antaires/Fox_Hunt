@@ -18,7 +18,7 @@ Enemy::Enemy(class Game* game, class Map* map)
   , m_Circle(nullptr)
   , m_Rectangle(nullptr)
 {
-  SetScale(0.15f);
+  SetScale(0.1f);
 
   // set up animation component
   m_AnimSpriteComponent = new AnimSpriteComponent(this);

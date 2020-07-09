@@ -14,4 +14,6 @@ public:
   virtual void ProcessInput(const uint8_t* keyState);
   virtual void ProcessMouse(const uint32_t mouseState, const int x, const int y);
   int GetUpdateOrder() const;
+
+  class Actor* GetOwner(); // not const because AI states may make changes
 };
