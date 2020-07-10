@@ -6,6 +6,7 @@ Actor::Actor(class Game* game)
   , m_Position(Vector2(0.0f, 0.0f))
   , m_Scale(1.0f)
   , m_Rotation(0.0f)
+  , m_PrevPosition(Vector2(0.0f, 0.0f))
   , m_TopCornerPosition(Vector2(0.0f, 0.0f))
   , m_Velocity(Vector2(0.0f, 0.0f))
   , m_ForwardVector(Vector2(0.0f, 0.0f))
@@ -46,6 +47,8 @@ void Actor::Update(float deltaTime)
 
 void Actor::UpdateComponents(float deltaTime)
 {
+    m_PrevPosition = m_Position;
+
     for (auto comp : m_Components)
     {
       comp->Update(deltaTime);
@@ -54,6 +57,7 @@ void Actor::UpdateComponents(float deltaTime)
     // update top corner position TODO: still used?
     m_TopCornerPosition.x = m_Position.x - (m_Width/2);
     m_TopCornerPosition.y = m_Position.y - (m_Height/2);
+
 }
 
 void Actor::UpdateActor(float deltaTime){}
@@ -100,6 +104,8 @@ void Actor::SetState(State state) { m_State = state;}
 Vector2 Actor::GetPosition() const { return m_Position;}
 
 void Actor::SetPosition(const Vector2& pos) { m_Position = pos;}
+
+Vector2 Actor::GetPrevPosition() const { return m_PrevPosition; }
 
 float Actor::GetRotation() const { return m_Rotation;}
 

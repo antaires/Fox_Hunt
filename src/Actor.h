@@ -16,6 +16,7 @@ private:
   Vector2 m_Position; // center of actor
   float m_Scale; // 1.0f is 100%
   float m_Rotation; // rotation angle in RADIANS
+  Vector2 m_PrevPosition;
 
   Vector2 m_TopCornerPosition; // used for rectangle collision check
 
@@ -52,6 +53,7 @@ public:
   void SetState(State state);
   Vector2 GetPosition() const;
   void SetPosition(const Vector2& pos);
+  Vector2 GetPrevPosition() const;
   float GetRotation() const;
   void SetRotation(float rotation);
   float GetScale() const;
