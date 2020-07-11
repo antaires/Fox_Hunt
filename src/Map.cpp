@@ -9,15 +9,17 @@
 #include <sstream>
 #include <cmath>
 #include <queue>
+#include <random>
+#include <time.h>
 
 Map::Map(std::string fileName)
   : m_Rows(0)
   , m_Cols(0)
-  , m_CellWidth(0)
-  , m_CellHeight(0)
 {
   LoadCsv(fileName);
   BuildGraph();
+
+  srand(time(NULL));
 }
 
 bool Map::LoadCsv(std::string fileName)
@@ -67,15 +69,21 @@ void Map::BuildGraph()
   // then, use this map to quickly set all adjacent nodes for each node by checking
   // for top, left, bottom, right nodes in unordered_map. if not there, its a barrer.
   std::unordered_map<int, GraphNode*> csvToNode; // TODO store this?
+  int nodeIndex = 0;
   for(int i = 0; i < m_Csv.size(); ++i)
   {
     // only add if not barrier
     if (m_Csv.at(i) < 1)
     {
       GraphNode* gn = new GraphNode();
-      gn->m_Index = i; // TODO need to store this?
+      gn->m_CsvIndex = i; // TODO need to store this?
+      gn->m_NodeIndex = nodeIndex;
       gn->m_Position = GetPositionFromCsvIndexCentered(i);
       csvToNode[i] = gn;
+
+      // make a map, csvIndex -> nodeIndex
+      mapCsvToNodeIndex[i] = nodeIndex;
+      nodeIndex++;
     }
   }
 
@@ -160,7 +168,6 @@ bool Map::CollidesWithBarrier(Vector2 pos, float width, float height)
       }
     }
   }
-
   return false;
 }
 
@@ -180,44 +187,94 @@ Vector2 Map::GetPositionFromCsvIndexCentered(int index)
 
 int Map::ConvertPositionto1Dindex(Vector2 pos)
 {
-  int i = (int) pos.y / m_CellHeight;
-  int j = (int) pos.x / m_CellWidth;
-  return m_Cols * i + j;
+  if (m_CellWidth > 0 && m_CellHeight > 0)
+  {
+    int i = (int) pos.y / m_CellHeight;
+    int j = (int) pos.x / m_CellWidth;
+    return m_Cols * i + j;
+  }
+  return 0;
+}
+
+int Map::ConvertCsvToNodeIndex(int csvIndex)
+{
+  // if not in map, defaults to closest (numerically)
+  auto it = mapCsvToNodeIndex.find(csvIndex);
+  while (it == mapCsvToNodeIndex.end())
+  {
+    csvIndex++;
+    it = mapCsvToNodeIndex.find(csvIndex % (m_Cols * m_Rows));
+  }
+  return it->second;
 }
 
 std::vector<int> Map::GetCsv() const
 {
-  // to be used by AI and pathfinding to build graph
   return m_Csv;
 }
 
-std::vector<Vector2> Map::GetPath(Vector2 from, Vector2 to)
+void Map::GetPathTest(Vector2 from, Vector2 to, std::vector<Vector2>& path)
 {
-  std::vector<Vector2> path;
+  // todo remove
+  path.push_back(GetRandomOpenPosition());
+  path.push_back(GetRandomOpenPosition());
+  path.push_back(GetRandomOpenPosition());
+}
 
-  // calculate index from position
-  int indexFrom = ConvertPositionto1Dindex(from);
-  int indexTo   = ConvertPositionto1Dindex(to);
+Vector2 Map::GetRandomOpenPosition() const
+{
+  // randomly pick index from graph
+  int randomIndex = GetRand(0, m_Graph.m_Nodes.size() - 1);
+  return m_Graph.m_Nodes[randomIndex]->m_Position;
+}
+
+void Map::GetPath(Vector2 from, Vector2 to, std::vector<Vector2>& path)
+{
+
+  if (!path.empty()){ path.clear(); }
+
+  // calculate csv index from position
+  int indexFrom = ConvertCsvToNodeIndex(ConvertPositionto1Dindex(from)); // TODO this needs to return m_Nodes index, not overall csv index!
+  int indexTo   = ConvertCsvToNodeIndex(ConvertPositionto1Dindex(to));
+
+  // translate csv index to nodeIndex, and return if attempting to access barrier
+  std::cout<<"\nIndexFrom: "<< indexFrom << " IndexTo: "<< indexTo;
 
   // BFS
   // search from to to from, to avoid reversing path
   NodeToParentMap parentMap;
-  bool found = BFS(m_Graph, m_Graph.m_Nodes[indexTo], m_Graph.m_Nodes[indexFrom], parentMap);
-  if(found)
+  bool found = false;
+  if (indexFrom < m_Graph.m_Nodes.size() && indexFrom < m_Graph.m_Nodes.size())
   {
-    // reconstruct path by using parent pointers in outMap because indexFrom parent points to proceeding node
-    auto it = parentMap.find(m_Graph.m_Nodes[indexFrom]);
-    while(it != parentMap.end())
+    found = BFS(m_Graph, m_Graph.m_Nodes[indexTo], m_Graph.m_Nodes[indexFrom], parentMap);
+
+    if(found)
     {
-      path.push_back(it->second->m_Position);
-      it = parentMap.find(it->first); // TODO first or second correctly used here?
+      // reconstruct path by using parent pointers in outMap because indexFrom parent points to proceeding node
+      auto it = parentMap.find(m_Graph.m_Nodes[indexFrom]);
+
+      while(it != parentMap.end())
+      {
+        if (it->first != nullptr){std::cout<<"\nINDEX csv:"<<it->first->m_CsvIndex<<" node:"<<it->first->m_NodeIndex;} // todo remove
+        path.push_back(it->first->m_Position);
+
+        if (it->second != nullptr)
+        {
+          it = parentMap.find(it->second);
+        } else {
+          it = parentMap.end();
+        }
+      }
+    } else {
+      std::cout<<"\nNO path found";
     }
+
   }
+
 
   // GBFS
 
   // A*
-  return path;
 }
 
 bool Map::BFS(const Graph& graph, const GraphNode* start, const GraphNode* goal, NodeToParentMap& outMap)
@@ -234,6 +291,7 @@ bool Map::BFS(const Graph& graph, const GraphNode* start, const GraphNode* goal,
     // dequeue a node
     const GraphNode* current = queue.front();
     queue.pop();
+
     if (current == goal)
     {
       pathFound = true;
@@ -265,4 +323,9 @@ bool Map::GBFS()
 bool Map::AStar()
 {
   return false;
+}
+
+float Map::GetRand(int min, int max) const
+{
+  return rand() % (max - min + 1) + min;
 }

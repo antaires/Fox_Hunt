@@ -8,20 +8,13 @@ AIPatrol::AIPatrol(class AIComponent* owner)
   :AIState(owner)
 {
   // TODO set actor goal as current position
-  // TESTING
-  Vector2 a(0.0f, 600.0f);
-  Vector2 b(600.f, 0.0f);
-
-  m_Path.push_back(a);
-  m_Path.push_back(b);
-
   m_Owner->GetOwner()->SetGoal(Vector2(30.0f, 30.0f));
 }
 
 // override with behaviours for this state
 void AIPatrol::Update(float deltaTime)
 {
-  // decide if i stay in patrol or change state
+  // TODO decide if i stay in patrol or change state
 
   // if STAY IN PATROL:
   Actor* owner = m_Owner->GetOwner();
@@ -35,10 +28,23 @@ void AIPatrol::Update(float deltaTime)
     {
       owner->SetGoal(m_Path.at(0));
       m_Path.erase(m_Path.begin() + 0); // erase first element
-    } else {
+    }
+    else
+    {
       // if path empty then pick a new random target location (only in center of a cell grid)
       // and set goal using the m_Map
-      // TODO
+      m_Owner->GetMap()->GetPath(owner->GetPosition(), m_Owner->GetMap()->GetRandomOpenPosition(), m_Path);
+      if (!m_Path.empty())
+      {
+        // path found, set next goal point as next node in path
+        owner->SetGoal(m_Path.at(0));
+        m_Path.erase(m_Path.begin() + 0);
+      }
+      else
+      {
+        // no path found, default to zero position & try again
+        m_Path.push_back(Vector2(0.0f, 0.0f));
+      }
     }
   }
 

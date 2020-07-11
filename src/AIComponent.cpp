@@ -46,3 +46,8 @@ void AIComponent::RegisterState(AIState* state)
 {
   m_StateMap.emplace(state->GetName(), state);
 }
+
+Map* AIComponent::GetMap() const
+{
+  return m_Map;
+}

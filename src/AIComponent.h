@@ -21,4 +21,6 @@ public:
 
   // add new state to the map
   void RegisterState(class AIState* state);
+
+  Map* GetMap() const;
 };
