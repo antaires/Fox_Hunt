@@ -2,8 +2,6 @@
 #include "AIState.h"
 #include "SDL2/SDL.h" // just for SDL_Log
 
-#include <iostream> // todo remove
-
 AIComponent::AIComponent(class Actor* owner, class Map* map)
   :Component(owner)
   , m_CurrentState(nullptr)
@@ -16,8 +14,6 @@ void AIComponent::Update(float deltaTime)
   {
     m_CurrentState->Update(deltaTime);
   }
-
-  std::cout<<"\nState"<<m_CurrentState->GetName();
 }
 
 void AIComponent::ChangeState(const std::string& name)

@@ -18,7 +18,7 @@ void AIHunt::Update(float deltaTime)
   Vector2 toPlayer = playerPos - owner->GetPosition();
 
   owner->SetGoal(playerPos);
-  // if player within x distance, switch to hunt / attack
+  // if player over x distance, switch to patrol
   if ( toPlayer.Length() > 300.0f )
   {
     m_Owner->ChangeState("Patrol");

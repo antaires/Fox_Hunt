@@ -43,7 +43,7 @@ Enemy::Enemy(class Game* game, class Map* map)
   m_AnimSpriteComponent->SetAnimationClip("stillLeft", 0, 0, false);
   m_AnimSpriteComponent->SetAnimationClip("stillUp", 0, 0, false);
   m_AnimSpriteComponent->SetAnimationClip("stillDown", 0, 0, false);
-  m_AnimSpriteComponent->SetAnimationClip("masked", 1, 6, false);
+  m_AnimSpriteComponent->SetAnimationClip("dying", 1, 6, false);
 
   // set actor heigth / width from texture and scale
   SetHeight(m_AnimSpriteComponent->GetTextureHeight() * GetScale());
@@ -146,7 +146,7 @@ void Enemy::HandleDeath()
   if (!m_DyingStarted)
   {
     // if first time here, start dying animation
-    m_AnimSpriteComponent->SetCurrentAnimationClip("masked");
+    m_AnimSpriteComponent->SetCurrentAnimationClip("dying");
   }
 
   // else if anim done, set to m_Dead state

@@ -226,6 +226,7 @@ void Game::LoadData()
 
   // create path map (barriers and walls) and AI
   m_Map = new Map("assets/testMap01.csv");
+  m_Map->SetMode(Map::E_BFS); // choose pathfinding algorithm
 
   // create player
   m_Player = new Player(this); // scale set inside class

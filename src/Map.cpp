@@ -13,7 +13,8 @@
 #include <time.h>
 
 Map::Map(std::string fileName)
-  : m_Rows(0)
+  : m_Mode(E_BFS)
+  , m_Rows(0)
   , m_Cols(0)
 {
   LoadCsv(fileName);
@@ -243,7 +244,15 @@ void Map::GetPath(Vector2 from, Vector2 to, std::vector<Vector2>& path)
   bool found = false;
   if (indexFrom < m_Graph.m_Nodes.size() && indexFrom < m_Graph.m_Nodes.size())
   {
-    found = BFS(m_Graph, m_Graph.m_Nodes[indexTo], m_Graph.m_Nodes[indexFrom], parentMap);
+    if(m_Mode == E_BFS)
+    {
+      found = BFS(m_Graph, m_Graph.m_Nodes[indexTo], m_Graph.m_Nodes[indexFrom], parentMap);
+    } else if (m_Mode == E_GBFS)
+    {
+      //
+    } else {
+      // A*
+    }
 
     if(found)
     {
@@ -271,8 +280,15 @@ void Map::GetPath(Vector2 from, Vector2 to, std::vector<Vector2>& path)
   // A*
 }
 
+void Map::SetMode(Mode mode)
+{
+  m_Mode = mode;
+}
+
 bool Map::BFS(const Graph& graph, const GraphNode* start, const GraphNode* goal, NodeToParentMap& outMap)
 {
+  // uses queue to consider nodes in FIFO manner
+
   // whether we found a path
   bool pathFound = false;
 
@@ -308,14 +324,20 @@ bool Map::BFS(const Graph& graph, const GraphNode* start, const GraphNode* goal,
   return pathFound;
 }
 
-bool Map::GBFS()
+bool Map::GBFS(const Graph& graph, const GraphNode* start, const GraphNode* goal, GBFSMap& outMap)
 {
-  // todo
+  // Greedy BFS: not gauranteed to find shortest path to goal
+  // uses heuristic to pick which node to consider next
+
+  // TODO
+
   return false;
 }
 
 bool Map::AStar()
 {
+  // TODO
+
   return false;
 }
 
