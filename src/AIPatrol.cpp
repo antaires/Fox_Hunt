@@ -1,27 +1,23 @@
 #include "AIPatrol.h"
 #include "AIComponent.h"
 #include "Actor.h"
+#include "Game.h"
 
 #include <iostream> // todo remove
 
 AIPatrol::AIPatrol(class AIComponent* owner)
   :AIState(owner)
-{
-  // TODO set actor goal as current position
-  m_Owner->GetOwner()->SetGoal(Vector2(30.0f, 30.0f));
-}
+{}
 
 // override with behaviours for this state
 void AIPatrol::Update(float deltaTime)
 {
-  // TODO decide if i stay in patrol or change state
-
   // if STAY IN PATROL:
   Actor* owner = m_Owner->GetOwner();
   Vector2 diff = owner->GetPosition() - owner->GetGoal();
   Vector2 prevPos = owner->GetPrevPosition();
   Vector2 pos = owner->GetPosition();
-  if ( diff.Length() < 50.0f || (prevPos.x == pos.x && prevPos.y == pos.y) )
+  if ( diff.Length() < 30.0f || (prevPos.x == pos.x && prevPos.y == pos.y) )
   {
     // set as next in vector
     if (!m_Path.empty())
@@ -50,12 +46,17 @@ void AIPatrol::Update(float deltaTime)
 
   // TODO if 'see' player using line-of-sight (collision ray, player)
   // if player within x distance, switch to hunt / attack
-  //m_Owner->ChangeState("Hunt");
+  Vector2 playerPos = owner->GetGame()->GetPlayerPosition();
+  Vector2 distanceToPlayer = playerPos - owner->GetPosition();
+  if ( distanceToPlayer.Length() < 300.0f)
+  {
+    m_Owner->ChangeState("Hunt");
+  }
 }
 
 void AIPatrol::OnEnter()
 {
-  // pick random target location
+  m_Owner->GetOwner()->SetGoal(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
 }
 
 void AIPatrol::OnExit()

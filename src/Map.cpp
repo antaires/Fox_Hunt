@@ -234,11 +234,8 @@ void Map::GetPath(Vector2 from, Vector2 to, std::vector<Vector2>& path)
   if (!path.empty()){ path.clear(); }
 
   // calculate csv index from position
-  int indexFrom = ConvertCsvToNodeIndex(ConvertPositionto1Dindex(from)); // TODO this needs to return m_Nodes index, not overall csv index!
+  int indexFrom = ConvertCsvToNodeIndex(ConvertPositionto1Dindex(from));
   int indexTo   = ConvertCsvToNodeIndex(ConvertPositionto1Dindex(to));
-
-  // translate csv index to nodeIndex, and return if attempting to access barrier
-  std::cout<<"\nIndexFrom: "<< indexFrom << " IndexTo: "<< indexTo;
 
   // BFS
   // search from to to from, to avoid reversing path
@@ -252,12 +249,11 @@ void Map::GetPath(Vector2 from, Vector2 to, std::vector<Vector2>& path)
     {
       // reconstruct path by using parent pointers in outMap because indexFrom parent points to proceeding node
       auto it = parentMap.find(m_Graph.m_Nodes[indexFrom]);
-
       while(it != parentMap.end())
       {
-        if (it->first != nullptr){std::cout<<"\nINDEX csv:"<<it->first->m_CsvIndex<<" node:"<<it->first->m_NodeIndex;} // todo remove
-        path.push_back(it->first->m_Position);
-
+        if (it->first != nullptr){
+          path.push_back(it->first->m_Position);
+        }
         if (it->second != nullptr)
         {
           it = parentMap.find(it->second);
@@ -265,8 +261,6 @@ void Map::GetPath(Vector2 from, Vector2 to, std::vector<Vector2>& path)
           it = parentMap.end();
         }
       }
-    } else {
-      std::cout<<"\nNO path found";
     }
 
   }

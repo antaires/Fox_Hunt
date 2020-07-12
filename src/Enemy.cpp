@@ -5,6 +5,7 @@
 #include "RectangleComponent.h"
 #include "AIComponent.h"
 #include "AIPatrol.h"
+#include "AIHunt.h"
 #include "NavigationComponent.h"
 #include "Player.h"
 #include "Game.h"
@@ -62,7 +63,7 @@ Enemy::Enemy(class Game* game, class Map* map)
   AIComponent* aic = new AIComponent(this, map);
   // register states with ai component
   aic->RegisterState(new AIPatrol(aic));
-  // aic->RegisterState(new AIHunt(aic));
+  aic->RegisterState(new AIHunt(aic));
   // aic->RegisterState(new AIAttack(aic));
   // aic->RegisterState(new AIFlee(aic));
   // set initial state

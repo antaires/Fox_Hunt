@@ -232,9 +232,14 @@ void Game::LoadData()
   m_Player->SetPosition(Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/3));
 
   // create initial enemies TODO: make several
-  Enemy* enemy = new Enemy(this, m_Map); // scale set inside class
-  enemy->SetPosition(Vector2(30, SCREEN_HEIGHT/2));
-  m_Enemies.push_back(enemy);
+  Enemy* enemy1 = new Enemy(this, m_Map); // scale set inside class
+  enemy1->SetPosition(Vector2(30, SCREEN_HEIGHT/2));
+  m_Enemies.push_back(enemy1);
+  Enemy* enemy2 = new Enemy(this, m_Map); // scale set inside class
+  enemy2->SetPosition(Vector2(SCREEN_WIDTH - 30, SCREEN_HEIGHT/2));
+  m_Enemies.push_back(enemy2);
+
+
 
   // create background tile map
   Actor* tileMapActor = new Actor(this);
@@ -357,6 +362,11 @@ void Game::GenerateOutput()
   }
 
   SDL_RenderPresent(m_Renderer);
+}
+
+Vector2 Game::GetPlayerPosition() const
+{
+  return m_Player->GetPosition();
 }
 
 std::vector<Enemy*> Game::GetEnemies()
