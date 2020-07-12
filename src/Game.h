@@ -52,6 +52,7 @@ public:
   void RemoveSprite(class SpriteComponent* sprite);
   void SetMap(class Map* map);
   Vector2 GetPlayerPosition() const;
+  class Player* GetPlayer();
 
   SDL_Texture* GetTexture(const std::string& fileName);
 

@@ -19,15 +19,17 @@ void AIHunt::Update(float deltaTime)
 
   owner->SetGoal(playerPos);
   // if player over x distance, switch to patrol
-  if ( toPlayer.Length() > 300.0f )
+  if ( toPlayer.Length() > ENEMY_HUNT_DISTANCE )
   {
     m_Owner->ChangeState("Patrol");
   }
 
-  //if ( distanceToPlayer.Length() < 100.0f)
-  //{
-  //  m_Owner->ChangeState("Attack");
-  //}
+  // if player close enough, attack
+  if ( toPlayer.Length() < ENEMY_ATTACK_DISTANCE)
+  {
+    m_Owner->ChangeState("Attack");
+  }
+
 }
 
 void AIHunt::OnEnter()

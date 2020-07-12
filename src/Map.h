@@ -15,17 +15,37 @@ struct GraphNode
   Vector2 m_Position;
   std::vector<GraphNode*> m_Adjacent;
 };
+
 struct Graph
 {
   std::vector<GraphNode*> m_Nodes;
 };
+
 using NodeToParentMap = std::unordered_map<const GraphNode*, const GraphNode*>;
 
 // GBFS
 struct WeightedEdge
 {
-
+  // which nodes connect to this edge?
+  struct WeightedGraphNode* m_From;
+  struct WeightedGraphNode* m_To;
+  // weight of this edge
+  float m_Weight;
 };
+
+struct WeightedGraphNode
+{
+  int m_CsvIndex; // stores index for csv vector
+  int m_NodeIndex;
+  Vector2 m_Position;
+  std::vector<WeightedEdge*> m_Edges; // TODO update to priority queue
+};
+
+struct WeightedGrap
+{
+  std::vector<WeightedGraphNode*> m_Nodes;
+};
+
 struct GBFSScratch
 {
   const WeightedEdge* m_ParentEdige = nullptr;
@@ -33,7 +53,7 @@ struct GBFSScratch
   bool m_InOpenSet = false;
   bool m_InClosedSet = false;
 };
-using GBFSMap = std::unordered_map<const GraphNode*, GBFSScratch>;
+using GBFSMap = std::unordered_map<const WeightedGraphNode*, GBFSScratch>;
 
 // A*
 struct AStarScratch
@@ -44,7 +64,7 @@ struct AStarScratch
   bool m_InOpenSet = false;
   bool m_InClosedSet = false;
 };
-using AStarMap = std::vector<const GraphNode*, AStarScratch>;
+using AStarMap = std::vector<const WeightedGraphNode*, AStarScratch>;
 
 // used to prevent actors from passing through barriers
 class Map
@@ -69,6 +89,12 @@ private:
   Vector2 GetPositionFromCsvIndexCentered(int index);
   int ConvertPositionto1Dindex(Vector2 pos);
   int ConvertCsvToNodeIndex(int csvIndex);
+
+  void GetPathBFS(Vector2 from, Vector2 to, std::vector<Vector2>& path);
+  void GetPathGBFS(Vector2 from, Vector2 to, std::vector<Vector2>& path);
+  void GetPathAStar(Vector2 from, Vector2 to, std::vector<Vector2>& path);
+
+  float ComputeHeuristic(const WeightedGraphNode* a, const WeightedGraphNode* b);
 
   bool BFS(const Graph& graph, const GraphNode* start, const GraphNode* goal, NodeToParentMap& outMap);
   bool GBFS(const Graph& graph, const GraphNode* start, const GraphNode* goal, GBFSMap& outMap);

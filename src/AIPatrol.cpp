@@ -48,7 +48,7 @@ void AIPatrol::Update(float deltaTime)
   // if player within x distance, switch to hunt / attack
   Vector2 playerPos = owner->GetGame()->GetPlayerPosition();
   Vector2 distanceToPlayer = playerPos - owner->GetPosition();
-  if ( distanceToPlayer.Length() < 300.0f)
+  if ( distanceToPlayer.Length() < ENEMY_HUNT_DISTANCE)
   {
     m_Owner->ChangeState("Hunt");
   }

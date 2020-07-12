@@ -231,29 +231,34 @@ Vector2 Map::GetRandomOpenPosition() const
 
 void Map::GetPath(Vector2 from, Vector2 to, std::vector<Vector2>& path)
 {
-
   if (!path.empty()){ path.clear(); }
 
+  if (m_Mode == E_BFS)
+  {
+    return GetPathBFS(from, to, path);
+  }
+  else if (m_Mode == E_GBFS)
+  {
+    return GetPathGBFS(from, to, path);
+  }
+  else
+  {
+    return GetPathAStar(from, to, path);
+  }
+}
+
+void Map::GetPathBFS(Vector2 from, Vector2 to, std::vector<Vector2>& path)
+{
   // calculate csv index from position
   int indexFrom = ConvertCsvToNodeIndex(ConvertPositionto1Dindex(from));
   int indexTo   = ConvertCsvToNodeIndex(ConvertPositionto1Dindex(to));
 
-  // BFS
   // search from to to from, to avoid reversing path
   NodeToParentMap parentMap;
   bool found = false;
   if (indexFrom < m_Graph.m_Nodes.size() && indexFrom < m_Graph.m_Nodes.size())
   {
-    if(m_Mode == E_BFS)
-    {
-      found = BFS(m_Graph, m_Graph.m_Nodes[indexTo], m_Graph.m_Nodes[indexFrom], parentMap);
-    } else if (m_Mode == E_GBFS)
-    {
-      //
-    } else {
-      // A*
-    }
-
+    found = BFS(m_Graph, m_Graph.m_Nodes[indexTo], m_Graph.m_Nodes[indexFrom], parentMap);
     if(found)
     {
       // reconstruct path by using parent pointers in outMap because indexFrom parent points to proceeding node
@@ -271,18 +276,27 @@ void Map::GetPath(Vector2 from, Vector2 to, std::vector<Vector2>& path)
         }
       }
     }
-
   }
 
-
-  // GBFS
-
-  // A*
 }
+
+void Map::GetPathGBFS(Vector2 from, Vector2 to, std::vector<Vector2>& path)
+{}
+
+void Map::GetPathAStar(Vector2 from, Vector2 to, std::vector<Vector2>& path)
+{}
 
 void Map::SetMode(Mode mode)
 {
   m_Mode = mode;
+}
+
+float Map::ComputeHeuristic(const WeightedGraphNode* a, const WeightedGraphNode* b)
+{
+  // Use Manhattan distance
+  Vector2 start = a->m_Position;
+  Vector2 end   = b->m_Position;
+  return Math::Abs(start.x - end.x) + Math::Abs(start.y - end.y);
 }
 
 bool Map::BFS(const Graph& graph, const GraphNode* start, const GraphNode* goal, NodeToParentMap& outMap)

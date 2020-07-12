@@ -370,6 +370,12 @@ Vector2 Game::GetPlayerPosition() const
   return m_Player->GetPosition();
 }
 
+class Player* Game::GetPlayer()
+{
+  return m_Player;
+}
+
+
 std::vector<Enemy*> Game::GetEnemies()
 {
   return m_Enemies;

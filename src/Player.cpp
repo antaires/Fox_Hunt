@@ -131,5 +131,5 @@ class RectangleComponent* Player::GetRectangle() const { return m_Rectangle; }
 
 void Player::HandleDeath()
 {
-  // TODO - play death animation
+  // TODO - play death animation & freeze motion
 }
