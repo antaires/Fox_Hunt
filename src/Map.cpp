@@ -249,6 +249,7 @@ void Map::GetPath(Vector2 from, Vector2 to, std::vector<Vector2>& path)
 
 void Map::GetPathBFS(Vector2 from, Vector2 to, std::vector<Vector2>& path)
 {
+  // for unweighted graph, gauranteed to find the shortest path to goal
   // calculate csv index from position
   int indexFrom = ConvertCsvToNodeIndex(ConvertPositionto1Dindex(from));
   int indexTo   = ConvertCsvToNodeIndex(ConvertPositionto1Dindex(to));

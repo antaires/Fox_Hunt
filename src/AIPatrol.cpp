@@ -17,7 +17,7 @@ void AIPatrol::Update(float deltaTime)
   Vector2 diff = owner->GetPosition() - owner->GetGoal();
   Vector2 prevPos = owner->GetPrevPosition();
   Vector2 pos = owner->GetPosition();
-  if ( diff.Length() < 30.0f || (prevPos.x == pos.x && prevPos.y == pos.y) )
+  if ( diff.Length() < 1.0f || (prevPos.x == pos.x && prevPos.y == pos.y) )
   {
     // set as next in vector
     if (!m_Path.empty())

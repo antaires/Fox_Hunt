@@ -1,7 +1,5 @@
 #include "NavigationComponent.h"
 
-#include <iostream> // todo remove
-
 NavigationComponent::NavigationComponent(class Actor* owner, int updateOrder)
   :MoveComponent(owner, updateOrder)
 {}
