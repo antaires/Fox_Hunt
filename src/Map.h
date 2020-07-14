@@ -83,6 +83,7 @@ private:
 
   Graph m_Graph;
 
+  void GenerateRandomLevelMap(std::string fileName);
   bool LoadCsv(std::string fileName);
   void BuildGraph();
   Vector2 GetPositionFromCsvIndex(int index);

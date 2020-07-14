@@ -17,10 +17,64 @@ Map::Map(std::string fileName)
   , m_Rows(0)
   , m_Cols(0)
 {
+  GenerateRandomLevelMap(fileName);
   LoadCsv(fileName);
   BuildGraph();
 
   srand(time(NULL));
+}
+
+void Map::GenerateRandomLevelMap(std::string fileName)
+{
+  int map[MAP_SIZE][MAP_SIZE] = {0};
+
+  // uses a simple random walk 4 times
+  for(int i = 0; i < 4; ++i)
+  {
+    int x = (int) GetRand(0, MAP_SIZE-1);
+    int y = (int) GetRand(0, MAP_SIZE-1);
+
+    // set start to wall, and walk randomly, setting walls from this point
+    while(map[x][y] == 0)
+    {
+      map[x][y] = 1;
+      int direction = (int) GetRand(0, 3);
+      if (direction == 0)
+      {
+        // go up
+        y+=1;
+      } else if (direction == 1)
+      {
+        // go down
+        y-=1;
+      } else if (direction == 2){
+        // go left
+        x-=1;
+      } else {
+        x+=1;
+      }
+
+      if (x < 0){x = 0;}
+      if (x >= MAP_SIZE){x = MAP_SIZE-1;}
+      if (y < 0){y = 0;}
+      if (y >= MAP_SIZE){y = MAP_SIZE-1;}
+    }
+  }
+
+  // output to fileName
+  // open file in write mode
+  std::ofstream outfile;
+  outfile.open(fileName);
+  for(int i = 0; i < MAP_SIZE; ++i)
+  {
+    for(int j = 0; j < MAP_SIZE; ++j)
+    {
+      // write to file
+      outfile << map[i][j] << ",";
+    }
+    outfile <<"\n";
+  }
+  outfile.close();
 }
 
 bool Map::LoadCsv(std::string fileName)
