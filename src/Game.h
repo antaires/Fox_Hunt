@@ -10,6 +10,7 @@
 #include "Enemy.h"
 #include "SpriteComponent.h"
 
+
 class Game {
 private:
   SDL_Window* m_Window;
@@ -23,7 +24,6 @@ private:
   // Game specific
   Player* m_Player;
   std::vector<Enemy*> m_Enemies;
-
 
   std::vector<class Actor*> m_Actors;
   std::vector<class Actor*> m_PendingActors;

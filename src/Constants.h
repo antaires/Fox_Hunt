@@ -1,6 +1,6 @@
 #pragma once
 
-const int MAP_SIZE = 20;
+const int MAP_SIZE = 15;
 
 const float FOX_SPEED = 200.0f;
 const float FOX_ANGULAR_SPEED = 50.0f;

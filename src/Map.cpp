@@ -28,8 +28,8 @@ void Map::GenerateRandomLevelMap(std::string fileName)
 {
   int map[MAP_SIZE][MAP_SIZE] = {0};
 
-  // uses a simple random walk 4 times
-  for(int i = 0; i < 4; ++i)
+  // uses a simple random walk i times
+  for(int i = 0; i < 10; ++i)
   {
     int x = (int) GetRand(0, MAP_SIZE-1);
     int y = (int) GetRand(0, MAP_SIZE-1);
